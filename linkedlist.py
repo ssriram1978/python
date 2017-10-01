@@ -20,7 +20,7 @@ class linkedlist :
     def is_empty(self):
         return self.__size == 0
 
-    def addHead(self,object):
+    def push(self,object):
         temp = self.Node(object,self.__head)
         #set the current head previous as this node.
         if self.__head != None:
@@ -40,7 +40,7 @@ class linkedlist :
             print("temp.object=",temp.object+"\n")
             temp=temp.next
 
-    def addTail(self,object):
+    def enqueue(self,object):
         #make sure to make the new node previous point to tail.
         temp = self.Node(object,None,self.__tail)
         #set the tail next to point to this new node.
@@ -48,7 +48,7 @@ class linkedlist :
         self.__tail=temp
         self.__size+=1
 
-    def popHead(self):
+    def dequeue_pop(self):
         temp=self.__head
 
         if temp!=None:
@@ -76,27 +76,33 @@ class linkedlist :
             self.__size=self.__size-1
         return temp.object
 
-list=linkedlist()
-list.addHead("Sriram")
-list.addHead("Sridhar")
-list.addHead("Srinivas")
-list.addHead("Nithya")
-list.addHead("Sriya")
-print("list.printList=%s"%(list.printList()))
-list.addTail("Home")
-print("list.printList=%s"%(list.printList()))
-print("list.popHead() ")
-print(list.popHead())
-print("list.printList=%s"%(list.printList()))
-print("list.popHead() ")
-print(list.popHead())
-print("list.printList=%s"%(list.printList()))
-print(list.popHead())
-print("list.printList=%s"%(list.printList()))
-print(list.popHead())
-print("list.printList=%s"%(list.printList()))
-print(list.popTail())
-print("list.printList=%s"%(list.printList()))
-print(list.popTail())
-print("list.printList=%s"%(list.printList()))
 
+list=linkedlist()
+list.push("Sriram")
+list.push("Sridhar")
+list.push("Srinivas")
+list.push("Nithya")
+list.push("Sriya")
+print("list.printList=%s"%(list.printList()))
+list.enqueue("Home")
+print("list.printList=%s"%(list.printList()))
+print("list.dequeue_pop() ")
+print(list.dequeue_pop())
+print("list.printList=%s"%(list.printList()))
+print("list.dequeue_pop() ")
+print(list.dequeue_pop())
+print("list.printList=%s"%(list.printList()))
+print(list.dequeue_pop())
+print("list.printList=%s"%(list.printList()))
+print(list.dequeue_pop())
+print("list.printList=%s"%(list.printList()))
+print(list.popTail())
+print("list.printList=%s"%(list.printList()))
+print(list.popTail())
+print("list.printList=%s"%(list.printList()))
+list.push("Sriram")
+list.push("Sridhar")
+list.push("Srinivas")
+list.push("Nithya")
+list.push("Sriya")
+print("list.printList=%s"%(list.printList()))

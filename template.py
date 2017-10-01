@@ -1,10 +1,9 @@
 # A Python program to demonstrate working of string template
 import string
 import math
-import collections
-import thread
+from thread import *
 import heapq
-from collections import deque
+from collections import *
 
 # List Student stores the name and marks of three students
 Student = [('Ram',90), ('Ankit',78), ('Bob',92)]
@@ -47,3 +46,8 @@ print(queue.popleft())
 print(queue.popleft())
 print(queue.popleft())
 
+print("demonstrate hashtable\n")
+hashtable=[];
+hashtable.insert(10,"sriram")
+hashtable.insert(20,"sridhar")
+print hashtable

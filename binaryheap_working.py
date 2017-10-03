@@ -19,9 +19,9 @@ def heapify(arr, n, i):
 
     # Change root, if needed
     if largest != i:
-        print("Before swapping")
+        #print("heapify:Before swapping")
         print(arr)
-        print("\nheapify:swapping %d" % (arr[i]) + "and %d" % (arr[largest]))
+        #print("\nheapify:swapping %d" % (arr[i]) + "and %d" % (arr[largest]))
         temp=arr[i]
         arr[i]=arr[largest]
         arr[largest]=temp
@@ -35,11 +35,11 @@ def heapSort(arr):
     n = len(arr)
     half=n//2
     # Build a maxheap.
-    for i in range(half, -1, -1):
+    for i in range(0, half, 1):
         heapify(arr, half, i)
 
     # One by one extract elements
-    for i in range(n - 1, 0, -1):
+    for i in range(n-1, 0, -1):
         print("Before swapping")
         print(arr)
         print("\nswapping %d"%(arr[i])+"and %d"%(arr[0]))

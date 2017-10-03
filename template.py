@@ -1,7 +1,7 @@
 # A Python program to demonstrate working of string template
 import string
 import math
-from thread import *
+#from thread import *
 import heapq
 from collections import *
 
@@ -50,4 +50,5 @@ print("demonstrate hashtable\n")
 hashtable=[];
 hashtable.insert(10,"sriram")
 hashtable.insert(20,"sridhar")
-print hashtable
+print(hashtable)
+

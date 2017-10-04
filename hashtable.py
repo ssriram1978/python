@@ -1,23 +1,25 @@
 
 class Node:
-    def __init__(self, key, object):
+    def __init__(self, hash, key, object):
         self.__used = 1
+        self.__hash=hash
         self.__key=key
         self.__object = object
-        print("\nAdding key=%d"%(key) + " object=%d" %(object))
+        #print("\nAdding key=%d"%(key) + " object=%d" %(object))
 
     def match_node(self,key):
         if(self.__key==key):
-            print("\nFound a match for this key(%d)" % (key) + "object=%d" % (self.__object))
+            #print("\nFound a match for this key(%d)" % (key) + "hash=%d" % (self.__hash) + "object=%d" % (self.__object))
             return self.__object
         else:
+            #print("\nNo match found for key(%d)" % (key) + "hash=%d" % (self.__hash) + "object=%d" % (self.__object))
             return None
 
     # staticmethod
     def print_node(self, node):
         if (node == None):
             return
-        print("node.__used=%d" % (node.__used) + "node.__object=%d"%(node.__object) + "node.__key=%d"%(node.__key))
+        #print("node.__used=%d" % (node.__used) + "node.__object=%d"%(node.__object) + "node.__key=%d"%(node.__key) + "node.__hash=%d"%(node.__hash))
 
 class hash_array:
     def __init__(self, tableindex):
@@ -38,7 +40,7 @@ class hash_array:
         for node in self.__hash_linked_list:
             object=node.match_node(key)
             if(object != None):
-                print("Match found")
+                #print("Match found")
                 return object
         return None
 
@@ -53,7 +55,7 @@ class hash_array:
                 return None
 
     def add_node_to_list(self, key,object):
-        self.__hash_linked_list.append(Node(key,object))
+        self.__hash_linked_list.append(Node(self.__row,key,object))
 
 class hashtable:
     __USED=1
@@ -67,12 +69,14 @@ class hashtable:
                 self.__hash_array.append(hash_array(i))
 
     def return_node_at_location(self,index):
-        return self.__hash_array[index]
+        hash = self.generate_hash_key(index)
+        return self.__hash_array[hash]
 
     def search_using_key_in_hashtable(self,key):
-        row=self.__hash_array[key]
+        hash=self.generate_hash_key(key)
+        row=self.__hash_array[hash]
         if(row != None):
-            print("\nFound the row, searching for the node with key=%d"%(key))
+            #print("\nFound the row, searching for the node with key=%d"%(key))
             node=row.search_for_node(key)
             if(node != None):
                 print("\nFound a match for this key(%d)" % (key))
@@ -84,28 +88,30 @@ class hashtable:
         return self.__hash_array.__sizeof__()
 
     def add_to_hash_table(self,key,object):
-        node=self.__hash_array[key]
+        hash = self.generate_hash_key(key)
+        node=self.__hash_array[hash]
         if node == None:
-            print("Empty node at key %d"%(key))
+            #print("Empty node at key %d"%(key))
             return
         node.add_node_to_list(key,object)
 
-MAX_ELEMENTS=10
-hashtable_obj=hashtable(MAX_ELEMENTS)
+HASH_TABLE_SIZE=10
+MAX_ELEMENTS=10000
+hashtable_obj=hashtable(HASH_TABLE_SIZE)
 print(hashtable_obj.get_length())
 
-for index in range(20):
-    hashtable_obj.add_to_hash_table(hashtable_obj.generate_hash_key(index),index)
+for index in range(MAX_ELEMENTS):
+    hashtable_obj.add_to_hash_table(index,index)
 
-for index in range(20):
+for index in range(MAX_ELEMENTS):
     row_obj=hashtable_obj.return_node_at_location(index)
-    if(row_obj != None):
-        object = row_obj.print_list()
+    #if(row_obj != None):
+    #    object = row_obj.print_list()
 
-    for index in range(20):
-        obj=hashtable_obj.search_using_key_in_hashtable(hashtable_obj.generate_hash_key(index))
-        if(obj != None):
-            print(obj.print_node(node))
+for index in range(MAX_ELEMENTS):
+    obj=hashtable_obj.search_using_key_in_hashtable(index)
+    #if(obj != None):
+    #    print(obj.print_node(obj))
 
 #hashtable2 = {}
 #hashtable2.items()

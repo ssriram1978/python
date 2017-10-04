@@ -47,8 +47,9 @@ print(queue.popleft())
 print(queue.popleft())
 
 print("demonstrate hashtable\n")
-hashtable=[];
-hashtable.insert(10,"sriram")
-hashtable.insert(20,"sridhar")
+hashtable=["one","two","three"]
+hashtable.insert(1,"sriram")
+hashtable.insert(2,"sridhar")
 print(hashtable)
-
+print(hashtable[1])
+print(hashtable[2])

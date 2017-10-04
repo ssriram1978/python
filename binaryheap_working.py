@@ -50,7 +50,7 @@ def heapSort(arr):
 
 
 # Driver code to test above
-arr = [12, 11, 13, 5, 6, 7]
+arr = [12, 11, 13, 5, 6, 7, 22,1,5,2,3,9,8,10]
 heapSort(arr)
 n = len(arr)
 print("Sorted array is")

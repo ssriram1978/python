@@ -34,7 +34,7 @@ class hash_array:
 
     def print_list(self):
         for node in self.__hash_linked_list:
-            print node.print_node(node)
+            print(node.print_node(node))
 
     def search_for_node(self,key):
         for node in self.__hash_linked_list:

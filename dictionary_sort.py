@@ -28,6 +28,7 @@ class dictionary_sort :
         return sorted_dict
 
     def print_dict_sorted_array(self,sorted_dict):
+        #store the max count in a variable
         count = sorted_dict[0][1]
         index = 0
         for index in range(count, 0, -1):

@@ -35,11 +35,11 @@ def heapSort(arr):
     n = len(arr)
     half=n//2
     # Build a maxheap.
-    for i in range(0, half, 1):
-        heapify(arr, half, i)
+    for i in range(half-1,-1,-1):
+        heapify(arr, n, i)
 
     # One by one extract elements
-    for i in range(n-1, 0, -1):
+    for i in range(n-1, -1, -1):
         print("Before swapping")
         print(arr)
         print("\nswapping %d"%(arr[i])+"and %d"%(arr[0]))
@@ -50,7 +50,8 @@ def heapSort(arr):
 
 
 # Driver code to test above
-arr = [12, 11, 13, 5, 6, 7, 22,1,5,2,3,9,8,10]
+#arr = [12, 11, 13, 5, 6, 7, 22,1,5,2,3,9,8,10]
+arr=[5,7,3,8,2,9,4,1,6]
 heapSort(arr)
 n = len(arr)
 print("Sorted array is")

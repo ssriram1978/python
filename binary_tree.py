@@ -8,6 +8,9 @@ class Node :
     def get_object(self):
         return self.__object
 
+    def set_object(self,object):
+        self.__object=object
+
     def get_left(self):
         return self.__left
 
@@ -102,9 +105,42 @@ class Binary_tree :
         node.set_height(height)
         return height
 
-    def delete_node_from_binary_tree(self,node):
+    def find_max_node(self,node):
+        if node == None:
+            return None
+        while node.get_right() != None:
+            node=node.get_right()
+        return node
+
+    def find_min_node(self,node):
+        if node == None:
+            return None
+        while node.get_left() != None:
+            node=node.get_left()
+        return node
+
+    def delete_node_from_binary_tree(self,node,value):
         #to be implemented
-        return None
+        if node == None:
+            return None
+
+        if value == node.get_object():
+            if node.get_left() == None and node.get_right() == None :
+                #garbage collection will take care of deleting the node
+                return None
+            elif node.get_left() == None:
+                return node.get_right()
+            elif node.get_right() == None:
+                return node.get_left()
+            else:
+                minnode=self.find_min_node(node.get_right())
+                node.set_object(minnode.get_object())
+                node.set_right(self.delete_node_from_binary_tree(node.get_right(),node.get_object()))
+        elif value > node.get_object():
+            node.set_right(self.delete_node_from_binary_tree(node.get_right(),value))
+        else:
+            node.set_left(self.delete_node_from_binary_tree(node.get_left(), value))
+        return node
 
     def rebalance_binary_tree(self,node):
         #to be implemented
@@ -161,8 +197,26 @@ sorted_list = btree.return_sorted_list_inorder(btree.get_btree_root())
 print(sorted_list)
 btree.create_balanced_binary_tree_from_sorted_list(sorted_list)
 btree.compute_height_of_binary_tree(btree.get_self_balanced_tree_root())
-btree.print_binary_tree_inorder(btree.get_self_balanced_tree_root())
-return_value=btree.get_nodes_that_are_unbalanced(btree.get_btree_root())
-print("get_nodes_that_are_unbalanced for unbalanced btree returned" + return_value)
-return_value=btree.get_nodes_that_are_unbalanced(btree.get_self_balanced_tree_root())
-print("get_nodes_that_are_unbalanced for balanced btree returned" + return_value)
+#btree.print_binary_tree_inorder(btree.get_self_balanced_tree_root())
+#return_value=btree.get_nodes_that_are_unbalanced(btree.get_btree_root())
+#print("get_nodes_that_are_unbalanced for unbalanced btree returned" + return_value)
+#return_value=btree.get_nodes_that_are_unbalanced(btree.get_self_balanced_tree_root())
+#print("get_nodes_that_are_unbalanced for balanced btree returned" + return_value)
+
+sorted_list=[]
+btree.delete_node_from_binary_tree(btree.get_btree_root(),4)
+sorted_list = btree.return_sorted_list_inorder(btree.get_btree_root())
+print(sorted_list)
+btree.print_binary_tree_inorder(btree.get_btree_root())
+
+sorted_list=[]
+btree.delete_node_from_binary_tree(btree.get_btree_root(),9)
+sorted_list = btree.return_sorted_list_inorder(btree.get_btree_root())
+print(sorted_list)
+btree.print_binary_tree_inorder(btree.get_btree_root())
+
+sorted_list=[]
+btree.delete_node_from_binary_tree(btree.get_btree_root(),5)
+sorted_list = btree.return_sorted_list_inorder(btree.get_btree_root())
+print(sorted_list)
+btree.print_binary_tree_inorder(btree.get_btree_root())

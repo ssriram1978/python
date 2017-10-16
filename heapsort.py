@@ -30,9 +30,42 @@ class Heap :
             unsorted_array[max]=temp
             self.heapify(range,max,unsorted_array)
 
+    @staticmethod
+    def merge(array1,array2):
+        if array1==None or len(array1) == 0:
+            return array2
 
-unsorted_array=[5,7,3,8,2,9,4,1,6]
+        if array2 == None or len(array2) == 0:
+                return array1
+
+        array3=[]
+
+        array1_index=0
+        array2_index=0
+
+        while(array1_index < len(array1) and array2_index < len(array2)):
+            if(array1[array1_index] < array2[array2_index]):
+                array3.append(array1[array1_index])
+                array1_index+=1
+            else:
+                array3.append(array2[array2_index])
+                array2_index+=1
+        if array1_index < len(array1):
+            for index in range(array1_index,len(array1),1):
+                array3.append(array1[index])
+        elif array2_index < len(array2):
+            for index in range(array2_index,len(array2),1):
+                array3.append(array2[index])
+
+        return array3
+
+
+unsorted_array=[15,7,13,8,2,19,4,1,16]
 heap=Heap(unsorted_array)
 print(unsorted_array)
-
+unsorted_array2=[8,9,3,11,12,16,5,14,7]
+heap2=Heap(unsorted_array2)
+print(unsorted_array2)
+array3=Heap.merge(unsorted_array,unsorted_array2)
+print(array3)
 

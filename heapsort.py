@@ -1,33 +1,52 @@
 class Heap :
     def __init__(self,unsorted_array):
         array_len=len(unsorted_array)
-        range_max=array_len//2
-        for index in range(range_max-1,-1,-1):
+
+        #find the mid point of the array
+        range_max=(array_len-1)//2
+
+        #prepare a max heap data structure from the mid point to the beginning of the array.
+        for index in range(range_max,-1,-1):
             self.heapify(array_len,index,unsorted_array)
 
+        #pop all the items from the end to the first element at 0th location.
         for i in range(array_len-1,-1,-1):
+            #take a copy of the element at the current location
             temp=unsorted_array[i]
+            #swap the current location with the element at location 0
             unsorted_array[i]=unsorted_array[0]
+            #overwrite the location of the element at 0th location with the copied element.
             unsorted_array[0]=temp
+            #invoke the max heap algorithm from current index to index 0.
             self.heapify(i,0, unsorted_array)
 
     def heapify(self,range,index,unsorted_array):
-
+        #left node is current node times two plus one.
         left_index=index*2+1
+        #right node is current node times two plus two.
         right_index=index*2+2
 
+        #assume that maximum number is at the current index.
         max=index
 
+        #find out if the left node is greater than current node
         if left_index < range and unsorted_array[left_index] > unsorted_array[max]:
+            #assume left node is the max
             max=left_index
 
+        #find out if the right node is greater than the max node.
         if right_index < range and unsorted_array[right_index] > unsorted_array[max]:
+            #you found out that right node is the max node.
             max = right_index
 
+        #if the max node that was previously assumed to tbe the current index is not eual to the current
+        #node, then swap it.
         if max != index:
             temp=unsorted_array[index]
             unsorted_array[index]=unsorted_array[max]
             unsorted_array[max]=temp
+            #recursively do the above said heapify algo from the node that was found to be max to the current node.
+            #this is done because we want to bubble up the max node among the children of the max node.
             self.heapify(range,max,unsorted_array)
 
     @staticmethod

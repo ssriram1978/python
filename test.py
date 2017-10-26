@@ -23,3 +23,5 @@ object.function2()
 object2=test("Hello")
 object2.function1("world")
 object2.function2()
+
+print((0+3)//2)

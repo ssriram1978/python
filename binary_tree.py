@@ -178,6 +178,7 @@ class Binary_tree :
         return unbalanced_nodes
 
 
+
 btree = Binary_tree()
 btree.add_node_to_btree(btree.get_btree_root(),4)
 btree.add_node_to_btree(btree.get_btree_root(),8)
@@ -187,6 +188,10 @@ btree.add_node_to_btree(btree.get_btree_root(),1)
 btree.add_node_to_btree(btree.get_btree_root(),9)
 btree.add_node_to_btree(btree.get_btree_root(),10)
 btree.add_node_to_btree(btree.get_btree_root(),11)
+
+
+tree=check_for_binary_tree()
+print(tree.computeBSTHeight(btree))
 
 #btree.print_binary_tree_inorder(btree.get_btree_root())
 btree.compute_height_of_binary_tree(btree.get_btree_root())
@@ -220,3 +225,4 @@ btree.delete_node_from_binary_tree(btree.get_btree_root(),5)
 sorted_list = btree.return_sorted_list_inorder(btree.get_btree_root())
 print(sorted_list)
 btree.print_binary_tree_inorder(btree.get_btree_root())
+''

@@ -95,20 +95,20 @@ class linkedlist :
         prev_node=None
 
         current_node=self.__head
+
         # swap head and tail nodes.
         temp = self.__head
         self.__head = self.__tail
         self.__tail = temp
-        iteration_node=self.__head
 
         while(current_node):
-            #copy next node to next_node
+            #copy current's next node to next_node
             next_node=current_node.next
-            #copy previous node to previous_node
+            #copy current's previous node to previous_node
             previous_node=current_node.prev
-            #overwrite prev node with next_node
+            #overwrite current's previous node with next_node
             current_node.prev=next_node
-            #overwrite next node with prev_node
+            #overwrite current's next node with previous_node
             current_node.next=prev_node
             #make sure to copy prev_node as the current node.
             prev_node=current_node

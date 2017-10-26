@@ -25,6 +25,17 @@ class dictionary_sort :
                 occurance+=1
                 self.dict[character]=occurance
         sorted_dict=sorted(self.dict.items(),key=itemgetter(1),reverse=True)
+
+
+
+        sorted_dict2 = sorted(self.dict.keys(),key=itemgetter(0),reverse=True)
+        print("sorted_dict2=")
+        print(sorted_dict2)
+
+        sorted_dict3 = sorted(self.dict, key=itemgetter(0), reverse=True)
+        print("sorted_dict3=")
+        print(sorted_dict3)
+
         return sorted_dict
 
     def print_dict_sorted_array(self,sorted_dict):

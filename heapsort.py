@@ -88,3 +88,24 @@ print(unsorted_array2)
 array3=Heap.merge(unsorted_array,unsorted_array2)
 print(array3)
 
+def binary_search(input_num,sorted_array,start,end):
+    if input_num == None:
+        return -1
+    if sorted_array == None or len(sorted_array) == 0:
+        return -1
+    if start > end :
+        return -1
+
+    mid=(start+end)//2
+    if sorted_array[mid] == input_num:
+        return 1
+    elif sorted_array[mid] > input_num:
+        return binary_search(input_num,sorted_array,start,mid-1)
+    else:
+        return binary_search(input_num, sorted_array, mid+1,end)
+
+for index in range(len(array3)):
+    print("search for %d in the sorted_array returned %d" %(array3[index],
+                                                            binary_search(array3[index],array3,0,len(array3)-1)))
+
+print("search for 20 in the sorted_array returned %d" %(binary_search(20,array3,0,len(array3)-1)))

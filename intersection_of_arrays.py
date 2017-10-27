@@ -1,3 +1,6 @@
+#You are given two contiguous arrays.
+#find out if there is an overlap between those two arrays
+#return the common elements between both arrays
 
 def find_match_between_two_continuous_arrays(array1,array2):
     array1_start = array1[0]

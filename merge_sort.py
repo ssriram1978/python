@@ -65,6 +65,28 @@ class MergeSort :
             array2_index+=1
 
 
+def binary_search(input_num,sorted_array,start,end):
+    if input_num == None:
+        return -1
+    if sorted_array == None or len(sorted_array) == 0:
+        return -1
+    if start > end :
+        return -1
+
+    mid=(start+end)//2
+    if sorted_array[mid] == input_num:
+        return 1
+    elif sorted_array[mid] > input_num:
+        return binary_search(input_num,sorted_array,start,mid-1)
+    else:
+        return binary_search(input_num, sorted_array, mid+1,end)
+
 unsorted_array=[15,7,13,8,2,19,4,1,16]
 heap=MergeSort(unsorted_array)
 print(unsorted_array)
+
+for index in range(len(unsorted_array)):
+    print("search for %d in the sorted_array returned %d" %(unsorted_array[index],
+                                                            binary_search(unsorted_array[index],unsorted_array,0,len(unsorted_array)-1)))
+
+print("search for 20 in the sorted_array returned %d" %(binary_search(20,unsorted_array,0,len(unsorted_array)-1)))

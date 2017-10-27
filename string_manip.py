@@ -21,10 +21,10 @@ def ransom_note(magazine, ransom):
 magazine_name="hello this is sriram from westford"
 ransom_name="sriram westford"
 
-#magazine = input().strip().split(' ')
-#ransom = input().strip().split(' ')
-magazine = magazine_name.strip().split(' ')
-ransom = ransom_name.strip().split(' ')
+magazine = input().strip().split(' ')
+ransom = input().strip().split(' ')
+#magazine = magazine_name.strip().split(' ')
+#ransom = ransom_name.strip().split(' ')
 answer = ransom_note(magazine, ransom)
 if (answer):
     print("Yes")

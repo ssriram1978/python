@@ -1,3 +1,4 @@
+#this is an implementation of hash table using dictionary.
 
 class Node:
     def __init__(self, hash, key, object):

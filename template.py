@@ -17,39 +17,3 @@ for i in Student:
 
 print(math.log10(1000000))
 
-print("demonstrate heapq functionality")
-heap=[]
-heapq.heappush(heap,100)
-heapq.heappush(heap,200)
-heapq.heappush(heap,300)
-print(heapq.heappop(heap))
-print(heapq.heappop(heap))
-print(heapq.heappop(heap))
-
-print("demonstrate stack functionality\n")
-stack=[10,20,30]
-stack.append(40)
-stack.append(50)
-print(stack)
-print(stack.pop())
-print(stack.pop())
-print(stack.pop())
-print(stack.pop())
-
-print("demonstrate queue functionality\n")
-queue_list=[1,2,3,4,5,6]
-queue=deque(queue_list)
-queue.append(7)
-print(queue)
-print(queue.popleft())
-print(queue.popleft())
-print(queue.popleft())
-print(queue.popleft())
-
-print("demonstrate hashtable\n")
-hashtable=["one","two","three"]
-hashtable.insert(1,"sriram")
-hashtable.insert(2,"sridhar")
-print(hashtable)
-print(hashtable[1])
-print(hashtable[2])

@@ -29,7 +29,7 @@ def number_needed(a, b):
     return total_unmatched_count
 
 
-a = input().strip()
-b = input().strip()
+a = input().strip().split(' ')
+b = input().strip().split(' ')
 
 print(number_needed(a, b))

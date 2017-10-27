@@ -1,3 +1,4 @@
+#this is an implementation of hash table using list.
 
 class Node:
     def __init__(self, hash, key, object):
@@ -96,7 +97,7 @@ class hashtable:
         node.add_node_to_list(key,object)
 
 HASH_TABLE_SIZE=10
-MAX_ELEMENTS=10000
+MAX_ELEMENTS=100
 hashtable_obj=hashtable(HASH_TABLE_SIZE)
 print(hashtable_obj.get_length())
 

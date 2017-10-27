@@ -1,14 +1,15 @@
 print("Demonstrate doubly linked list")
+
+class Node:
+    def __init__(self, object, next=None, prev=None):
+        self.object = object
+        self.next = next
+        self.prev = prev
+
 class linkedlist :
     __head=None
     __tail=None
     __size=0
-
-    class Node:
-        def __init__(self,object,next=None,prev=None):
-            self.object=object
-            self.next=next
-            self.prev=prev
 
     def __init(self):
         self.__head=None

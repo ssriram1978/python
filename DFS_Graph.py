@@ -21,7 +21,7 @@ class Graph:
 
         # Mark the current node as visited and print it
         visited[v] = True
-        print v,
+        print(v)
 
         # Recur for all the vertices adjacent to this vertex
         for i in self.graph[v]:

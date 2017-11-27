@@ -4,20 +4,22 @@ import string
 from time import sleep
 from socket import getaddrinfo
 from collections import defaultdict
-import sys
+import sys, getopt
 import _socket
 import dns.resolver
 import dns.reversename
+
+import logging
 
 
 command_to_show_acl="ip netns exec haproxy echo \"show acl #0\" | socat /var/run/haproxy/admin.sock stdio"
 command_to_add_acl="ip netns exec haproxy echo \"add acl #0 %s\" | socat /var/run/haproxy/admin.sock stdio"
 command_to_del_acl="ip netns exec haproxy echo \"del acl #0 %s\" | socat /var/run/haproxy/admin.sock stdio"
 
-whitelist_file_name="whitelist_blacklist.txt"
+whitelist_file_name="/home/ssridhar/PycharmProjects/python/whitelist_blacklist.txt"
 
 class acl_list:
-    def __init__(self,listname,add_command,del_command,show_command):
+    def __init__(self,listname,add_command,del_command,show_command,loglevel):
         self.acl_ipaddr=[]
         self.domain_names=[]
         self.domain_names = []
@@ -26,6 +28,19 @@ class acl_list:
         self.show_cmd=show_command
         self.listname=listname
         self.domain_name_to_ip=defaultdict(list);
+
+
+        numeric_level = getattr(logging,loglevel.upper(), None)
+        if not isinstance(numeric_level, int):
+            logging.basicConfig(format='%(levelname)s:%(asctime)s:%(lineno)d:%(filename)s:%(funcName)s:%(message)s',
+                                datefmt='%m/%d/%Y %I:%M:%S %p',
+                                filename='whitelist_blacklist.log',
+                                level=logging.DEBUG)
+        else:
+            logging.basicConfig(format='%(levelname)s:%(asctime)s:%(lineno)d:%(filename)s:%(funcName)s:%(message)s',
+                                datefmt='%m/%d/%Y %I:%M:%S %p',
+                                filename='whitelist_blacklist.log',
+                                level=numeric_level)
 
         while True:
             try:
@@ -37,27 +52,28 @@ class acl_list:
                 self.cleanup_domain_name_dict()
                 #match the acl with the ip addresses.
                 self.refresh_acl()
-                print("sleeping for 0.2 seconds...")
+                logging.debug("sleeping for 0.2 seconds...")
                 sleep(0.2)
             except KeyboardInterrupt:
                 break
             except:
-                print("Unexpected error:", sys.exc_info()[0])
+                sys_exec_info=sys.exc_info()[0]
+                logging.error("Unexpected error:%s" %(sys_exec_info))
 
     def perform_acl_read(self):
         self.acl_ipaddr=[]
         completed = subprocess.run([self.show_cmd],check=True,shell=True,stdout=subprocess.PIPE)
-        #print('returncode:', completed.returncode)
+        #logging.debug('returncode:', completed.returncode)
         formated_string=completed.stdout.decode('utf-8')
         aclist=formated_string.strip().split('\n')
-        #print("\nself.aclist=")
-        #print(aclist)
+        #logging.debug("\nself.aclist=")
+        #logging.debug(aclist)
         for current_acl in aclist:
             temp_list = str(current_acl).split(' ')
             if len(temp_list) >= 2:
                 self.acl_ipaddr.append(temp_list[1])
-        print("\nself.acl_ipaddr=")
-        print(self.acl_ipaddr)
+        logging.info("\nself.acl_ipaddr=")
+        logging.info(print(self.acl_ipaddr))
 
     def read_list(self):
         #self.domain_name_to_ip={}
@@ -68,10 +84,10 @@ class acl_list:
                 if len(domain_name) > 0:
                     self.add_doman_name_to_list(domain_name)
                     self.convert_dnsname_to_ip(domain_name)
-        print("\nself.dictionary_elements=")
-        print(self.domain_name_to_ip)
-        #print("\nself.domain_names=")
-        #print(self.domain_names)
+        logging.info("\nself.dictionary_elements=")
+        logging.info(self.domain_name_to_ip)
+        #logging.debug("\nself.domain_names=")
+        #logging.debug(self.domain_names)
 
         ins.close()
 
@@ -101,7 +117,7 @@ class acl_list:
                         matchFound=True
                         break
                 if matchFound == False:
-                    print("For domain name (%s), appending IP address (%s) to the list." %(dnsname,ipa))
+                    logging.debug("For domain name (%s), appending IP address (%s) to the list." %(dnsname,ipa))
                     ip_list.append(ipa)
             #assign back the ip_list back to the dictionary.
             self.domain_name_to_ip[dnsname]=ip_list
@@ -121,15 +137,15 @@ class acl_list:
 
     def delete_acl_ip(self,acl_ip):
         final_del_acl = self.del_cmd % (acl_ip)
-        print(final_del_acl)
+        logging.debug(final_del_acl)
         completed = subprocess.run([final_del_acl],check=True,shell=True,stdout=subprocess.PIPE)
-        print('Deleted %s from acl.' % (acl_ip))
+        logging.debug('Deleted %s from acl.' % (acl_ip))
 
     def add_acl_ip(self,acl_ip):
         final_add_acl = self.add_cmd % (acl_ip)
-        print(final_add_acl)
+        logging.debug(final_add_acl)
         completed = subprocess.run([final_add_acl],check=True,shell=True,stdout=subprocess.PIPE)
-        print('Added %s to acl.' %(acl_ip))
+        logging.debug('Added %s to acl.' %(acl_ip))
 
     def refresh_acl(self):
         #add the new IP address provided by DNS resolution.
@@ -167,19 +183,38 @@ class acl_list:
             #for every item search for the item in the acl list.
             for ipaddr_acl in self.acl_ipaddr:
                 if ipaddr_in in ipaddr_acl:
-                    print("match found for "+ ipaddr_in)
+                    logging.debug("match found for "+ ipaddr_in)
                     match_found=True
                     break
             if match_found == True:
                 #do nothing
-                print("skipping this ip address %s because it is already in the list" %(ipaddr_in))
+                logging.debug("skipping this ip address %s because it is already in the list" %(ipaddr_in))
             else:
                 #add this new item to the acl list.
-                print("going to add this item %s to this list" %(ipaddr_in))
+                logging.debug("going to add this item %s to this list" %(ipaddr_in))
                 final_add_acl=self.add_cmd %(ipaddr_in)
-                print(final_add_acl)
+                logging.debug(final_add_acl)
                 completed = subprocess.run([final_add_acl],check=True,shell=True,stdout=subprocess.PIPE)
-                print('returncode:', completed.returncode)
+                logging.debug('returncode:', completed.returncode)
 
 
-file_command=acl_list(whitelist_file_name,command_to_add_acl,command_to_del_acl,command_to_show_acl)
+debug = ''
+def main(argv):
+    try:
+        opts, args = getopt.getopt(argv,"h:d:",["debug="])
+    except getopt.GetoptError:
+        print('whitelist_blacklist.py -d <debug>')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print('whitelist_blacklist.py -d <debug>')
+            sys.exit()
+        elif opt in ("-d"):
+            debug = arg
+            print("debug %s" %(debug))
+
+file_command=acl_list(whitelist_file_name,command_to_add_acl,command_to_del_acl,command_to_show_acl,debug)
+
+
+if __name__ == "__main__":
+   main(sys.argv[1:])

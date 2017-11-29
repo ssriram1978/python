@@ -98,7 +98,8 @@ class acl_list:
                 domain_name=str(line.strip())
                 if len(domain_name) > 0:
                     self.add_doman_name_to_list(domain_name)
-                    self.convert_dnsname_to_ip(domain_name)
+                    self.convert_dnsname_to_ip(domain_name,'http')
+                    self.convert_dnsname_to_ip(domain_name,'https')
         logging.debug("\nself.dictionary_elements=")
         logging.debug(self.domain_name_to_ip)
         logging.debug("\nself.domain_names=")
@@ -116,9 +117,9 @@ class acl_list:
             if matchFound == False:
                 self.domain_names.append(domain_name)
 
-    def convert_dnsname_to_ip(self,dnsname):
+    def convert_dnsname_to_ip(self,dnsname,protocol):
         # expand hostname into dict of ip addresses
-        for answer in getaddrinfo(dnsname, 80):
+        for answer in getaddrinfo(dnsname, protocol):
             ipa = str(answer[4][0])
             ip_list=self.domain_name_to_ip[dnsname]
 
@@ -222,26 +223,26 @@ class acl_list:
                 logging.debug('returncode:', completed.returncode)
 
 
-debug = ''
 def main(argv):
     try:
+        debug = ''
         opts, args = getopt.getopt(argv,"h:d:",["debug="])
+        for opt, arg in opts:
+            if opt == '-h':
+                print('whitelist_blacklist.py -d <debug>')
+                sys.exit()
+            elif opt in ("-d"):
+                debug = arg
+                print("debug %s" %(debug))
+
+        file_command=acl_list(whitelist_file_name,
+                      command_to_add_acl,
+                      command_to_del_acl,
+                      command_to_show_acl,
+                      debug)
     except getopt.GetoptError:
         print('whitelist_blacklist.py -d <debug>')
         sys.exit(2)
-    for opt, arg in opts:
-        if opt == '-h':
-            print('whitelist_blacklist.py -d <debug>')
-            sys.exit()
-        elif opt in ("-d"):
-            debug = arg
-            print("debug %s" %(debug))
-
-    file_command=acl_list(whitelist_file_name,
-                      command_to_add_acl,
-                      command_to_del_acl,
-                      command_to_show_acl,debug)
-
 
 if __name__ == "__main__":
    main(sys.argv[1:])

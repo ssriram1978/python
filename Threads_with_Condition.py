@@ -3,7 +3,7 @@ import threading
 import time
 import queue
 
-class threaded_queue:
+class threaded_queue :
     time_to_exit = 0
     condition = threading.Condition()
     q = queue.Queue()
@@ -35,8 +35,17 @@ class threaded_queue:
         while threaded_queue.q.empty() == False:
             with threaded_queue.condition:
                 threaded_queue.condition.notifyAll()
+
+        logging.debug('queue is empty')
         #terminate all consumer threads.
         threaded_queue.time_to_exit = 1
+        #with threaded_queue.condition:
+        #    threaded_queue.condition.notifyAll()
+        logging.debug('Waiting for worker threads')
+        main_thread = threading.main_thread()
+        for t in threading.enumerate():
+            if t is not main_thread:
+                t.join()
 
     @staticmethod
     def consumer(cond,threadQ):
@@ -45,7 +54,6 @@ class threaded_queue:
         while threaded_queue.time_to_exit == 0 :
             with cond:
                 cond.wait()
-                print()
                 logging.debug('Resource (%d) is consumed.' %(threadQ.get()))
 
     @staticmethod
@@ -54,7 +62,7 @@ class threaded_queue:
         logging.debug('Starting producer thread')
         with cond:
             logging.debug('Making resource available')
-            for i in range(10000):
+            for i in range(10):
                 threadQ.put(i)
             cond.notifyAll()
 

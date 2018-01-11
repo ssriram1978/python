@@ -11,19 +11,18 @@ class Solution:
         index_2=0
         index_3=0
         #start a while loop for the first index to be searched
-        while(index_1 < len(nums)) :
+        for index_1 in range(len(nums)) :
             #start a while loop for the second index to be searched
-            while(index_2 < len(nums)):
+            for index_2 in range(len(nums)):
                 #make sure not to reuse the same first index for the second index as well.
                 if index_2 == index_1:
-                    index_2+=1
                     continue
                 #start a while loop for the third index to be searched
-                while (index_3 < len(nums)):
+                for index_3 in range(len(nums)):
                     #make sure not to reuse the first and second indexes for the third index.
                     if index_3 == index_1 or index_3 == index_2:
-                        index_3 += 1
                         continue
+                    print("Index1=%d,index2=%d,index3=%d\n" %(index_1,index_2,index_3))
                     #Once you found the three variables that add up to 0 make sure not to add a duplicate entry into return_list.
                     if array[index_1] + array[index_2] + array[index_3] == 0:
                         print("Newly found values(%d,%d,%d) are at location(%d,%d,%d)\n" \
@@ -54,9 +53,6 @@ class Solution:
                             new_list.append(array[index_3])
                             return_list.append(new_list)
                             print("Append new_list to original return list.\n")
-                    index_3 += 1
-                index_2 += 1
-            index_1+=1
         print(return_list)
         return return_list
 

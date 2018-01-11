@@ -22,11 +22,11 @@ class Solution:
                     #make sure not to reuse the first and second indexes for the third index.
                     if index_3 == index_1 or index_3 == index_2:
                         continue
-                    print("Index1=%d,index2=%d,index3=%d\n" %(index_1,index_2,index_3))
+                    #print("Index1=%d,index2=%d,index3=%d\n" %(index_1,index_2,index_3))
                     #Once you found the three variables that add up to 0 make sure not to add a duplicate entry into return_list.
-                    if array[index_1] + array[index_2] + array[index_3] == 0:
-                        print("Newly found values(%d,%d,%d) are at location(%d,%d,%d)\n" \
-                        %(array[index_1],array[index_2],array[index_3],index_1,index_2,index_3))
+                    if nums[index_1] + nums[index_2] + nums[index_3] == 0:
+                        #print("Newly found values(%d,%d,%d) are at location(%d,%d,%d)\n" \
+                       #%(array[index_1],array[index_2],array[index_3],index_1,index_2,index_3))
                         #start iterating the lists contained in return list
                         match_found = False
                         for list in return_list:
@@ -35,27 +35,28 @@ class Solution:
                             #for each value in the list if it does not match with the newly found values, then match_found=False
                             for value in list:
                                 # break from the for loop if you did not find a match
-                                if value != array[index_1] and \
-                                   value != array[index_2] and \
-                                   value != array[index_3] :
-                                    print("Skipping this list because no match found...\n")
+                                if value != nums[index_1] and \
+                                   value != nums[index_2] and \
+                                   value != nums[index_3] :
+                                    #print("Skipping this list because no match found...\n")
                                     item_match = False
                                     break
                             #do not add this list if item_match is true.
                             if item_match == True:
-                                print("Skipping this duplicate list.\n")
+                                #print("Skipping this duplicate list.\n")
                                 match_found=True
                                 break;
                         if match_found == False:
                             new_list=[]
-                            new_list.append(array[index_1])
-                            new_list.append(array[index_2])
-                            new_list.append(array[index_3])
+                            new_list.append(nums[index_1])
+                            new_list.append(nums[index_2])
+                            new_list.append(nums[index_3])
                             return_list.append(new_list)
-                            print("Append new_list to original return list.\n")
-        print(return_list)
+                            #print("Append new_list to original return list.\n")
+        #print(return_list)
         return return_list
 
 sol = Solution()
-array=[-1, 0, 1, 2, -1, -4]
-sol.threeSum(array)
+#array=[-1, 0, 1, 2, -1, -4]
+array=[0,3,0,1,1,-1,-5,-5,3,-3,-3,0]
+print(sol.threeSum(array))

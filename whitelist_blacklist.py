@@ -11,6 +11,7 @@ import dns.reversename
 import logging
 import threading
 import time
+import requests
 
 command_to_show_acl="ip netns exec haproxy echo \"show acl #0\" | socat /var/run/haproxy/admin.sock stdio"
 command_to_add_acl="ip netns exec haproxy echo \"add acl #0 %s\" | socat /var/run/haproxy/admin.sock stdio"
@@ -78,7 +79,7 @@ class acl_list:
                                    check=True,
                                    shell=True,
                                    stdout=subprocess.PIPE)
-        logging.debug('returncode:', completed.returncode)
+        #logging.debug('returncode:', str(completed.returncode))
         formated_string=completed.stdout.decode('utf-8')
         aclist=formated_string.strip().split('\n')
         logging.debug("\nself.aclist=")
@@ -88,7 +89,7 @@ class acl_list:
             if len(temp_list) >= 2:
                 self.acl_ipaddr.append(temp_list[1])
         logging.debug("\nself.acl_ipaddr=")
-        logging.debug(print(self.acl_ipaddr))
+        logging.debug(self.acl_ipaddr)
 
     def read_list(self):
         #self.domain_name_to_ip={}
@@ -98,8 +99,10 @@ class acl_list:
                 domain_name=str(line.strip())
                 if len(domain_name) > 0:
                     self.add_doman_name_to_list(domain_name)
+                    self.convert_dnsname_to_ip2(domain_name)
                     self.convert_dnsname_to_ip(domain_name,'http')
                     self.convert_dnsname_to_ip(domain_name,'https')
+                    #self.convert_dnsname_to_ip3(domain_name)
         logging.debug("\nself.dictionary_elements=")
         logging.debug(self.domain_name_to_ip)
         logging.debug("\nself.domain_names=")
@@ -117,23 +120,81 @@ class acl_list:
             if matchFound == False:
                 self.domain_names.append(domain_name)
 
+    def convert_dnsname_to_ip3(self, dnsname):
+        # expand hostname into dict of ip addresses
+        for index in range(2):
+            if index == 0:
+                wget_request="http://%s" %(dnsname)
+            else:
+                wget_request = "https://%s" % (dnsname)
+
+            r = requests.get(wget_request, stream=True)
+            ip_port=r.raw._connection.sock.getpeername()
+            rdata=ip_port[0]
+            logging.debug("dns query for %s returned %s." %(dnsname,rdata))
+ 
+            ip_list = self.domain_name_to_ip[dnsname]
+            if ip_list == None:
+                ip_list = str(rdata)
+                logging.warning("For domain name (%s), adding IP address (%s) to the list." % (wget_request, rdata))
+            else:
+                #check if the ip address is already there in the list
+                matchFound=False
+                for ip_addr in ip_list:
+                    if str(ip_addr) in str(rdata):
+                        matchFound=True
+                        break
+                if matchFound == False:
+                    ip_list.append(str(rdata))
+                    logging.warning("For domain name (%s), appending IP address (%s) to the list." % (wget_request, rdata))
+            #assign back the ip_list back to the dictionary.
+            self.domain_name_to_ip[dnsname] = ip_list
+
+    def convert_dnsname_to_ip2(self, dnsname):
+        # expand hostname into dict of ip addresses
+        #print("Adresses for %s \n." %(dnsname))
+        for address_type in ['A', 'AAAA']:
+            try:
+                answers = dns.resolver.query(dnsname, address_type)
+                for rdata in answers:
+                    logging.debug("dns query for %s returned %s." %(dnsname,rdata))            
+                    ip_list = self.domain_name_to_ip[dnsname]
+                    if ip_list == None:
+                        ip_list = str(rdata)
+                        logging.warning("For domain name (%s), adding IP address (%s) to the list." % (dnsname, rdata))
+                    else:
+                        #check if the ip address is already there in the list
+                        matchFound=False
+                        for ip_addr in ip_list:
+                            if str(ip_addr) in str(rdata):
+                                matchFound=True
+                                break
+                        if matchFound == False:
+                            ip_list.append(str(rdata))
+                            logging.warning("For domain name (%s), appending IP address (%s) to the list." % (dnsname, rdata))
+                    # assign back the ip_list back to the dictionary.
+                    self.domain_name_to_ip[dnsname] = ip_list
+            except dns.resolver.NoAnswer:
+                pass
+
     def convert_dnsname_to_ip(self,dnsname,protocol):
         # expand hostname into dict of ip addresses
         for answer in getaddrinfo(dnsname, protocol):
             ipa = str(answer[4][0])
             ip_list=self.domain_name_to_ip[dnsname]
-
+            logging.debug("dns query for %s returned %s." %(dnsname,ipa)) 
             if ip_list == None:
                 ip_list = ipa
+                logging.warning("For domain name (%s), adding IP address (%s) to the list." % (dnsname, ipa))
             else:
                 #check if the ip address is already there in the list
                 matchFound=False
                 for ip_addr in ip_list:
-                    if str(ip_addr) in str(ipa):
+                    if str(ip_addr) in ipa:
                         matchFound=True
                         break
                 if matchFound == False:
-                    logging.debug("For domain name (%s), appending IP address (%s) to the list." %(dnsname,ipa))
+                    logging.warning("For domain name (%s), appending IP address (%s) to the list." %(dnsname,ipa))
                     ip_list.append(ipa)
             #assign back the ip_list back to the dictionary.
             self.domain_name_to_ip[dnsname]=ip_list
@@ -158,7 +219,6 @@ class acl_list:
                                    check=True,
                                    shell=True,
                                    stdout=subprocess.PIPE)
-        logging.debug('Deleted %s from acl.' % (acl_ip))
 
     def add_acl_ip(self,acl_ip):
         final_add_acl = self.add_cmd % (acl_ip)
@@ -166,8 +226,7 @@ class acl_list:
         completed = subprocess.run([final_add_acl],
                                    check=True,
                                    shell=True,
-                                   stdout=subprocess.PIPE)
-        logging.debug('Added %s to acl.' %(acl_ip))
+                                   stdout=subprocess.PIPE)        
 
     def refresh_acl(self):
         #add the new IP address provided by DNS resolution.
@@ -182,10 +241,13 @@ class acl_list:
                 if match_found == False:
                     #add this new ip to the list
                     self.add_acl_ip(ipaddr_in)
+                    logging.warning('Added %s->%s to acl in HAPROXY.' %(name,ipaddr_in))
+                    self.acl_ipaddr.append(ipaddr_in)
 
         #delete all those IP addresses that are stale in the acl_list
         for ipaddr_acl in self.acl_ipaddr:
             match_found = False
+            domain_name=""
             for domain_name, ipaddr_list in self.domain_name_to_ip.items():
                 for ipaddr_in in ipaddr_list:
                     # for every item search for the item in the acl list.
@@ -197,6 +259,7 @@ class acl_list:
             if match_found == False:
                 # del this ip from acl because this is stale.
                 self.delete_acl_ip(ipaddr_acl)
+                logging.warning('Deleted this stale IP %s from the acl in HAPROXY.' %(acl_ip))
 
 
     def perform_match(self):
@@ -220,7 +283,7 @@ class acl_list:
                                            check=True,
                                            shell=True,
                                            stdout=subprocess.PIPE)
-                logging.debug('returncode:', completed.returncode)
+                #logging.debug('returncode:', str(completed.returncode))
 
 
 def main(argv):
@@ -246,3 +309,4 @@ def main(argv):
 
 if __name__ == "__main__":
    main(sys.argv[1:])
+

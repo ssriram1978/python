@@ -1,4 +1,14 @@
-def number_needed(a, b):
+"""
+Write a python module to return the number of unmatched characters between two input strings.
+Example:
+    string1 = abcdefgh
+    string2 = abcghij
+    unmatched count= 5 (def ij)
+
+>>> unmatched_alphabet_count("abcdefgh","abcghij")
+5
+"""
+def unmatched_alphabet_count(a, b):
     dictionary_a = {}
     dictionary_b = {}
     total_unmatched_count = 0
@@ -9,6 +19,7 @@ def number_needed(a, b):
         else:
             count += 1
         dictionary_a[a[index]] = count
+    #print(dictionary_a)
 
     for index in range(len(b)):
         count = dictionary_b.get(b[index])
@@ -17,6 +28,7 @@ def number_needed(a, b):
         else:
             count += 1
         dictionary_b[b[index]] = count
+    #print(dictionary_b)
 
     for key, value in dictionary_a.items():
         if dictionary_b.get(key) == None:
@@ -29,7 +41,14 @@ def number_needed(a, b):
     return total_unmatched_count
 
 
-a = input().strip().split(' ')
-b = input().strip().split(' ')
+#a = input().strip().split(' ')
+#b = input().strip().split(' ')
 
-print(number_needed(a, b))
+a = input().strip()
+b = input().strip()
+
+print(unmatched_alphabet_count(a, b))
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()

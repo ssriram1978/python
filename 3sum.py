@@ -26,33 +26,45 @@ class Solution:
                     #Once you found the three variables that add up to 0 make sure not to add a duplicate entry into return_list.
                     if nums[index_1] + nums[index_2] + nums[index_3] == 0:
                         #print("Newly found values(%d,%d,%d) are at location(%d,%d,%d)\n" \
-                       #%(array[index_1],array[index_2],array[index_3],index_1,index_2,index_3))
+                        #%(array[index_1],array[index_2],array[index_3],index_1,index_2,index_3))
                         #start iterating the lists contained in return list
                         match_found = False
-                        for list in return_list:
-                            #declare a boolean match_found to be true
-                            item_match=True
-                            #for each value in the list if it does not match with the newly found values, then match_found=False
-                            for value in list:
-                                # break from the for loop if you did not find a match
-                                if value != nums[index_1] and \
-                                   value != nums[index_2] and \
-                                   value != nums[index_3] :
-                                    #print("Skipping this list because no match found...\n")
-                                    item_match = False
+                        new_list = []
+                        new_list.append(nums[index_1])
+                        new_list.append(nums[index_2])
+                        new_list.append(nums[index_3])
+                        #print(new_list)
+
+                        if return_list == None:
+                            #add the new list to the empty return list.
+                            return_list.append(new_list)
+                        else:
+                            for list in return_list:
+                                #check if the list elements match with the new list to be added.
+                                #print("list(%d:%d:%d) newlist(%d:%d:%d)\n" %(list[0],list[1],list[2],new_list[0],new_list[1],new_list[2]))
+                                location1=-1
+                                location2=-1
+                                location3=-1
+                                for index_new_list in range(len(new_list)):
+                                    for index_return_list in range(len(list)):
+                                        if new_list[index_new_list] == list[index_return_list]:
+                                            if location1 == -1:
+                                                location1=index_return_list
+                                                break
+                                            elif location2 == -1 and index_return_list != location1:
+                                                location2= index_return_list
+                                                break
+                                            elif location3 == -1 and index_return_list != location1 and index_return_list != location2:
+                                                location3 = index_return_list
+                                                break
+                                if location1 != -1 and location2 != -1 and location3 != -1:
+                                    match_found = True
                                     break
-                            #do not add this list if item_match is true.
-                            if item_match == True:
-                                #print("Skipping this duplicate list.\n")
-                                match_found=True
-                                break;
+                        #do not add this list if item_match is true.
                         if match_found == False:
-                            new_list=[]
-                            new_list.append(nums[index_1])
-                            new_list.append(nums[index_2])
-                            new_list.append(nums[index_3])
                             return_list.append(new_list)
                             #print("Append new_list to original return list.\n")
+                            #print(new_list)
         #print(return_list)
         return return_list
 

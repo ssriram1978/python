@@ -100,7 +100,7 @@ def sniff_packet(pkt):
     print(hexdump(pkt))
 
     if (pkt[Ether].dst != MAC_OF_DNS_CONT):
-        print("Discarding this packet because dest mac does not match this host.")
+        #print("Discarding this packet because dest mac does not match this host.")
         return
 
     if IP in pkt:
@@ -127,16 +127,19 @@ def sniff_packet(pkt):
                     DNS_resp.id=request.header.id
                     DNS_resp.qr=1
                     DNS_resp.opcode = 2
-                    DNS_resp.rcode=5
+                    #DNS_resp.rcode=0
+                    DNS_resp.rcode=9
                     DNS_resp.qd=DNSQR(qname=qname)
-                    DNS_resp.an=DNSRR(rrname=qname,type=16,ttl=3600,rdata='Not allowed.')
-
+                    DNS_resp.an=DNSRR(rrname=qname,type=16,rclass=1,ttl=3600,rdata='From VISP: Content restricted.')
+                    #DNS_resp.an=DNSRR(rrname=qname,type=1,rclass=1,ttl=3600,rdata='151.101.129.67')
+                    #DNS_resp.an=DNSRR(rrname=qname,type=1,rclass=1,ttl=3600,rdata='127.0.0.1')
+                    
                     response = DNSRecord.parse(bytes(DNS_resp))
                     dns_response_packet = Ether(src=pkt[Ether].dst,dst=pkt[Ether].src) /\
                                           IP(src=str(ip_dst), dst=str(ip_src)) / \
                                           UDP(sport=udp_dport, dport=udp_sport) / \
                                           DNS_resp
-                    print("Composing and sending DNS response pkt:")
+                    print("Composing and sending DNS Reject response pkt:")
                     print(hexdump(dns_response_packet))
                     sendp(dns_response_packet,loop=False,realtime=True,iface='DNSCONT',verbose=True)
                 else:

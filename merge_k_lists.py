@@ -26,11 +26,13 @@ class Solution:
 
         #compute the min node by traversing the whole list
         for index in range(self.total_number_of_linked_list):
+            if self.pointer_to_each_linked_list[index] == None:
+                continue
             if min_node == None:
                 min_node = self.pointer_to_each_linked_list[index]
+                min_index=index
             else:
-                if self.pointer_to_each_linked_list[index] != None \
-                    and min_node.val < self.pointer_to_each_linked_list[index].val:
+                if min_node.val > self.pointer_to_each_linked_list[index].val:
                     min_node = self.pointer_to_each_linked_list[index]
                     min_index=index
 
@@ -68,6 +70,7 @@ class Solution:
             min_node=self.computeMinNode()
             if min_node != None:
                 #create a new node and copy the content from the min node to this new node
+                #print(min_node.val)
                 new_node=ListNode(min_node.val)
                 if prevNode == None:
                     self.merged_list.append(new_node)
@@ -94,15 +97,15 @@ def print_lists(linked_lists):
     for index in range(len(linked_lists)):
         linked_list=linked_lists[index]
         while linked_list:
-            print("node=%d"%(linked_list.val))
+            print("%d ->"%(linked_list.val),end=" ")
             linked_list=linked_list.next
-
+        print("null\n")
 
 prepare_linked_list(0,10,2)
 prepare_linked_list(1,10,3)
 prepare_linked_list(30,35,1)
 #print(lists)
-#print_lists(lists)
+print_lists(lists)
 sol=Solution()
 merged_list = sol.mergeKLists(lists)
 print_lists(merged_list)

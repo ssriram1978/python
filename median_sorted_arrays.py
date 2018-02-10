@@ -51,9 +51,68 @@ Now size is 2, so median = (max(ar1[0], ar2[0]) + min(ar1[1], ar2[1]))/2
 """
 
 class Solution:
+    def find_median_of_array(self,array,start,end):
+        if array==None or array==[]:
+            return
+        median=0
+        total_length=end-start+1
+        if total_length%2==1:
+            #there are odd number of elements
+            #median is the middle element
+            median_index=start+((end-start)//2) # 1 2 3 4 5 6 start=1 end=5 end-start=4/2=2
+            median=array[median_index]
+            print("odd array"+str(array[start:end+1])+", median=%d"%(median))
+        else:
+            #there are even number of elements
+            #median is the average of the two middle elements
+            # 1 2 3 4 5 6 start=1 end=4
+            median_index=start+int((end-start)//2)
+            median=(array[median_index]+array[median_index+1])/2
+            print("median_index=%d"%(median_index)+" even array"+str(array[start:end+1])+",median=%d"%(median))
+
+        return median
     def findMedianSortedArrays(self, nums1, nums2):
         """
         :type nums1: List[int]
         :type nums2: List[int]
         :rtype: float
         """
+        median=-1
+        if nums1 == None or nums2 == None:
+            return median
+        #declare the start and end range
+        median1_start=0
+        median1_end=len(nums1)-1
+        median2_start=0
+        median2_end=len(nums2)-1
+        while (median1_end-median1_start)+1>2 and (median2_end-median2_start+1)>2:
+            #compute median of the arrays
+            median1=self.find_median_of_array(nums1,median1_start,median1_end)
+            median2=self.find_median_of_array(nums2,median2_start,median2_end)
+            if median1==median2:
+                #found the median
+                return median1
+            elif median1 > median2:
+                #the median is somewhere in between 0 and len(nums1)//2
+                #and the median is somewhere in betweeen len(nums2)//2 and len(nums2)
+                #keep doing this until there are 2 elements in nums1 and 2 elements in nums2
+                median1_end=(len(nums1)-1)//2
+                median2_start=(len(nums2)-1)//2
+            elif median1 < median2:
+                # the median is somewhere in between 0 and len(nums2)//2
+                # and the median is somewhere in betweeen len(nums1)//2 and len(nums1)
+                # keep doing this until there are 2 elements in nums1 and 2 elements in nums2
+                median1_start=(len(nums1)-1)//2
+                median2_end=(len(nums2)-1)//2
+        #Now that you have four elements left to search
+        print(nums1[median1_start:median1_end+1])
+        print(nums2[median2_start:median2_end+1])
+        median=(max(nums1[median1_start],nums2[median2_start])+ min(nums1[median1_end],nums2[median2_end]))/2
+
+        return median
+
+array1=[1,3,5,7,9]
+array2=[2,4,6,8,10]
+sol=Solution()
+median=sol.findMedianSortedArrays(array1,array2)
+print("median=%.2f"%(median))

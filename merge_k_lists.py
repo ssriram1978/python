@@ -104,6 +104,7 @@ def print_lists(linked_lists):
 prepare_linked_list(0,10,2)
 prepare_linked_list(1,10,3)
 prepare_linked_list(30,35,1)
+prepare_linked_list(0,35,1)
 #print(lists)
 print_lists(lists)
 sol=Solution()

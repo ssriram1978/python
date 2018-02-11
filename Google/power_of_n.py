@@ -14,9 +14,32 @@ Output: 9.26100
 """
 
 class Solution:
+
     def myPow(self, x, n):
         """
         :type x: float
         :type n: int
         :rtype: float
         """
+        if n==0:
+            return 1
+
+        return x * self.myPow(x, n - 1)
+
+    def myPowNonRecurse(self,x,n):
+        """
+        :type x: float
+        :type n: int
+        :rtype: float
+        """
+        if n==0:
+            return 1
+        result=1
+        for count in range(n):
+            result*=x
+        return result
+
+sol=Solution()
+print(sol.myPow(2.88,3))
+print(sol.myPowNonRecurse(2,4))
+

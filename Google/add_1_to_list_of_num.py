@@ -1,3 +1,10 @@
+"""
+Given a list, start from the end of the list.
+If plus one results in a carry, then, set the end element to 0 and remember the carry.
+Traverse from back to front and always remember to add the carry to the next element and remember the carry as told in step1
+Once you walked all the way to the front and this also resulted in a carry, then insert 1 at index 0 into the list.
+"""
+
 def add_one_to_number(list_num):
     if list_num == None:
         return

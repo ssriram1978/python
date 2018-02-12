@@ -44,6 +44,12 @@ cache.get(4);       // returns 4
 # param_1 = obj.get(key)
 # obj.put(key,value)
 
+"""
+Least recent used cache.
+Whenever an element gets accessed from cache, bring that element to the top of the stack.
+When a new element needs to be added to the cache, replace the bottom most element from the stack with the new element.
+
+"""
 
 from collections import defaultdict
 from collections import deque

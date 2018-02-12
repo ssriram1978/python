@@ -1,5 +1,8 @@
 from queue import deque
 from collections import defaultdict
+"""
+A graph node has a value and any number of neighbors.
+"""
 
 class Node:
     def __init__(self,value):
@@ -12,6 +15,17 @@ class Node:
             #keep adding neighbors to the queue
             self.neighbors.append(node)
 
+"""
+With BFS, you want to search for all adjacent neighbors before proceeding to the next level of neighbors to your neighbors.
+For this, you need to use a queue.
+The search algo goes like this:
+1. Enqueue the starting node to the queue.
+2. Start a while loop which checks for queue not to be empty and does the following.
+    Dequeue a node from the queue.
+    If the node matches with the destination, then, you found a route. Add it to the output and return True.
+    Else
+    You need to queue all the neighbors of this node. Before enqueuing, just make sure that the node is not already there in the queue.
+"""
 class bfs:
         def find_route(self,start,end):
             self.list_of_route = []
@@ -71,6 +85,14 @@ class bfs:
             else:
                 #print("Returning None")
                 return None
+
+"""
+With DFS, you recurse deep down to first neighbor and that neighbor's neighbor until you reach the end and then walk back
+recursing each neighbor's neighbor nodes searching for the destination until you find it.
+Once having come out of the first neighbor, you recurse into the second neighbor and do the previous step until you find the 
+destination.
+Note that every time you recurse, make sure that you do not revisit the neighbor who has already been visited.
+"""
 
 class dfs:
     def __init__(self):

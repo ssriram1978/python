@@ -1,3 +1,18 @@
+"""
+o(nlogn)
+It uses extra memory to merge two arrays.
+Given an unsorted array, invoke a recursive function that takes in start and end of the array.
+mid = start + (end-start//2)
+sort(array, start, mid)
+sort(array, mid+1, end)
+merge(array,start,mid,end)
+
+in merge function:
+set the left array start and end, right array start and end.
+create a temp list that stores the elements from both the arrays in a sorted order.
+After iterating over the two arrays, pop elements from temp array and overwrite the main unsorted array.
+"""
+
 from collections import deque
 
 def mergesort(unsorted_list):
@@ -32,7 +47,7 @@ def merge(unsorted_list,start,mid,end):
 def mergesort_recurse(unsorted_list,start,end):
     if start >= end:
         return
-    mid=(start+end)//2
+    mid=start + (end-start)//2
     mergesort_recurse(unsorted_list,start,mid)
     mergesort_recurse(unsorted_list,mid+1,end)
     merge(unsorted_list,start,mid,end)

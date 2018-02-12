@@ -1,3 +1,9 @@
+"""
+A Trie is a special tree which stores alphabets.
+Each node has 26 nodes which may or may not point to another node.
+Trie is used to store a buch of dictionary words and is easier to lookup and fetch words rhyming to the original word.
+"""
+
 class Node:
     def __init__(self):
         self.neighbors=[None]*26

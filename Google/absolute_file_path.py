@@ -36,7 +36,12 @@ Time complexity required: O(n) where n is the size of the input string.
 
 Notice that a/aa/aaa/file1.txt is not the longest file path, if there is another path aaaaaaaaaaaaaaaaaaaaa/sth.png.
 """
+"""
+Each node has neighbors and each neighbor has more neighbors.
+Perform DFS from the root node.
+Recursively keep looking for the longest file path.
 
+"""
 class Solution:
     def lengthLongestPath(self, input):
         """

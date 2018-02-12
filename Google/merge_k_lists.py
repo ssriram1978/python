@@ -4,6 +4,12 @@
 #list3 = 0->9->10->11
 #Output:
 #0->1->2->3->4->5->6->7->8->9->10->11
+"""
+Assign pointers to each of the starting position of the nodes in the linked list.
+Find the smallest node among these pointers and copy the item to a new linked list.
+Move the smallest pointer to point to the next node in the linked list.
+Peform the above said algorithm until you walked all the nodes in all the linked lists.
+"""
 # Definition for singly-linked list.
 class ListNode:
     def __init__(self, x):

@@ -13,6 +13,11 @@ Input:
 Output:
 [5,6]
 """
+"""
+In the first sweep, compute min and max and also keep adding the elements to a hash table. o(n)
+Having computed min and max, now start a for loop and check if the index is there in the hash table, if it is not
+there in the hash table, then, append this index to the output list.o(x) where x is the range.
+"""
 class Solution:
     def findDisappearedNumbers(self, nums):
         """

@@ -1,3 +1,18 @@
+"""
+minheap is a binary tree with left and right nodes but the nodes are virtual,meaning they are actually elements in an array.
+Good thing about minheap is that it a balanced tree and always has min element on the top of the tree.
+There are two operations that could be performed on a min heap.
+1. add an element to the minheap.
+    When you want to add an element, add it to the end of the array and perform heapifyUp()
+2. delete the min element from the minheap.
+    When you want to delete an element, swap the end of the array to the top element and perform heapifyDown().
+
+In heapifyUp() check if the current element is less than its parent and if so, swap them and continue this until the
+min element bubbles up to the top.
+In heapifyDown(), get the min of the child of the root node and compare it with the root node.
+    if the min children is smaller than the root node, swap the nodes and continue this operation on the swapped child node.
+"""
+
 class minheap:
     def __init__(self):
         self.head=None

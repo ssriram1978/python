@@ -4,6 +4,9 @@
 #if m is 10011 there are atleast 5 bits between j and i.
 #example: input N = 10000000000, M = 10011, i=2 and j=6
 #output: N = 10001001100
+"""
+Just left shift M  i times and then or it with the current number N.
+"""
 
 def insert_m_into_n(n,m,i,j):
     if m<=0 or n<=0 or j-i <=0:

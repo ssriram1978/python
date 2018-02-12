@@ -25,7 +25,9 @@ Your serialize and deserialize algorithms should be stateless.
 
 
 """
-
+"""
+perform a breadth first search and keep writing the content of the elements into a list and return it.
+"""
 
 # Definition for a binary tree node.
 # class TreeNode(object):

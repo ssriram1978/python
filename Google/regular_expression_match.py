@@ -12,7 +12,13 @@
 #isMatch("aa", ".*") → true
 #isMatch("ab", ".*") → true
 #isMatch("aab", "c*a*b") → true
-
+"""
+The idea is to slide the input string over the pattern.
+If you find that the content of the indexes of input string and pattern do not match,
+move the index of the pattern by 1 and retry sliding the input string over the pattern.
+If the input string matches with the pattern, return true.
+If the input string does not match with the pattern, return false.
+"""
 class Solution:
 
     def match_string_with_pattern(self,s,p,p_start):

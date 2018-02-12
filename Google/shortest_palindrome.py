@@ -8,7 +8,13 @@ Given "aacecaaa", return "aaacecaaa".
 
 Given "abcd", return "dcbabcd".
 """
-
+"""
+start from the mid of the string and check if the elements are palindrome and find the breaking point.
+If you found a breaking point, then, try to check if characters need to be added to the left or right part of the 
+string to make it a palindrome. If so, then, return those characters.
+If you did not find any breaking point and the index is right at the middle, then, you need to return the whole reversed 
+string to make it a palindrome.
+"""
 
 class Solution(object):
     def shortestPalindrome(self, s):

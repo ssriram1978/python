@@ -2,6 +2,17 @@
 #find the length of the longest sequence of 1s that you can create
 #example: Input: 1775 (or: 11011101111)
 #output 8
+"""
+Convert the number to ascii. bin(output)
+Starting from index 0 keep looking for a character with 0 and while looking for 0
+    keep incementing the number of 1's in that string.
+Once you reached 0 mark that location and keep looking for the next 0 in the string and while looking for 0
+    keep incrementing the number of 1's in that string.
+Store the max number of 1's in a max variable if the previously computed max variable is less than the current max number of 1's.
+
+Keep repeating the above said step from the marked location till the end of the string.
+Return the max variable.
+"""
 
 def find_longest_seq_of_1s(input):
     if input == None:

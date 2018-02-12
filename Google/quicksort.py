@@ -1,3 +1,16 @@
+"""
+This is an algorithm that runs at order of(nlogn).
+It does not require extra storage and is in place sort and does not require extra memory.
+This algorithm can be slower and may run at o(n**2) if you pick the wrong pivot.
+Now, the algo goes like this:
+pick a pivot which is start+(end-start)//2
+start a loop which iterates until left is less than or equal to right
+first find a number larger than pivot from the left most position.
+start a loop from the end of the array that searches for an element that is smaller than pivot.
+    Swap these two numbers.
+    Continue this until you break from the loop
+Recursively sort the left half and the right half.
+"""
 def quicksort(unsorted_list):
     if unsorted_list == None:
         return

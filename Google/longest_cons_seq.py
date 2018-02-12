@@ -4,6 +4,22 @@
 #The longest consecutive elements sequence is [1, 2, 3, 4]. Return its length: 4.
 #Your algorithm should run in O(n) complexity.
 
+"""
+1. Add each element to a hash table. o(n)
+2. For each element x in the list, o(n)
+   check if x is already there in the output list and skip the element if it is already there.
+   check if x-1 or x+1 is there in the hash table.
+     If x-1 or x+1 is not there in the hash table, then, go to the next element in the list.
+     If x-1 is there in the hash table:
+       append x and x-1 to the output list
+       keep searching for x=x-1 and keep appending it to output list until you do not find a match.
+     If x+1 is there in the hash table:
+       append x and x-1 to the output list
+       keep searching for x=x+1 and keep appending it to the output list until you do not find a match.
+
+    Walk over the output_list and find the largest sub list that contains all elements and return this list.
+"""
+
 from collections import defaultdict
 
 class Solution:

@@ -16,7 +16,21 @@ minStack.pop();
 minStack.top();      --> Returns 0.
 minStack.getMin();   --> Returns -2.
 """
+"""
+Keep stack1 for storing elements and stack2 that stores min element.
+Have a min variable that stores the min value in the stack.
+Every push operation will do the following:
+    push an element into the stack1.
+    if the min value variable is greater than the current element,
+        set the min value to the current element
+    push the min value to the stack2
 
+Every pop operation will do the following:
+    pop an element from stack1:
+    pop an element from stack2 which is actually the min element computed when the item was inserted into the stack.
+    
+getmin will return the minimum value stored in the variable.
+"""
 class MinStack:
     def __init__(self):
         """

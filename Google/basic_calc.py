@@ -11,7 +11,32 @@ Some examples:
 "(1+(4+5+2)-3)+(6+8)" = 23
 (1*(3*(2/(5+3*4))+10*(1/(3*4))))
 """
+"""
+Have three variables defined locally.
+1. result that stores the computed result.
+2. number that stores the previous number.
+3. sign that stores the previous sign.
 
+  Start reading the expression:
+    If the character is a digit between 0 to 9, then, store it in number variable.
+    If the character is a + or - or * or /, then, 
+        first compute the previously stored result = result (sign) number.
+        overwrite this character as the new sign.
+        If sign is empty, then just add the number to the result.
+        wipe off number to 0.
+    If the character is (
+        Push the previously computed result and sign into a stack.
+        Reset the number to 0
+    If the character is )
+        Compute the previously stored result = result (sign) number.
+        Pop the sign and over write sign variable.
+        Pop the result and over write number as the result.
+        Note that this will be picked up when the character is + or - or * or /
+    
+   Finally when you break out of the for loop, just make sure to perform
+        result = result (sign) number
+        
+"""
 
 class Solution:
     def isNumber(self,ch):

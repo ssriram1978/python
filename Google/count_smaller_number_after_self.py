@@ -14,7 +14,10 @@ Return the array [2, 1, 1, 0].
 
 
 """
-
+"""
+1. Brute force: Use two for loops. o(n**2)
+2. AVL tree: o(nlogn)
+"""
 
 class Solution(object):
     def countSmaller(self, nums):

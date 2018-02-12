@@ -18,6 +18,10 @@ A, B have equal lengths in range [1, 100].
 A[i], B[i] are integers in range [0, 10^5].
 
 """
+"""
+Prepare a dict which contains the element and its index of array B.
+For every eleent of A, jump into this dict and find the element in o(1) and its corresponding index and keep appending it to output list.
+"""
 class Solution:
     def anagramMappings(self, A, B):
         """

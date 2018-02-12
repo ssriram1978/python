@@ -1,6 +1,19 @@
 import re
 
-
+"""
+Find the string having the minimum length. Let this length be L.
+Perform a binary search on any one string (from the input array of strings). 
+Let us take the first string and do a binary search on the characters from the index – 0 to L-1.
+Initially, take low = 0 and high = L-1 and divide the string into two halves – left (low to mid) and right (mid+1 to high).
+Check whether all the characters in the left half is present at the corresponding indices (low to mid) of 
+all the strings or not. 
+If it is present then we append this half to our prefix string and we look in the right half in a hope to 
+find a longer prefix.(It is guaranteed that a common prefix string is there.)
+Otherwise, if all the characters in the left half is not present at the corresponding indices (low to mid) 
+in all the strings, then we need not look at the right half as there is some character(s) in the left half itself 
+which is not a part of the longest prefix string. So we indeed look at the left half in a hope to find a 
+common prefix string. (It may be possible that we don’t find any common prefix string)
+"""
 class Solution:
     def longestCommonPrefix(self, strs):
         """
@@ -72,4 +85,6 @@ class Solution:
 
 sol=Solution()
 list=["abcdef","awfasfdef","asfafdefafagfagfeg","srgehytrjtktkdef"]
+print(sol.longestCommonPrefix(list))
+list=["abcdef","abc","ab","defab"]
 print(sol.longestCommonPrefix(list))

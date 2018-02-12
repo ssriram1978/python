@@ -12,7 +12,29 @@ prices = [1, 2, 3, 0, 2]
 maxProfit = 3
 transactions = [buy, sell, cooldown, buy, sell]
 """
+"""
+Algo1:
+1. Find and store the index which has an element lesser than the previous element. (buy)
+2. Starting from the index found at step1, find and store the index which has an element greater than previous index.(sell)
+3. Compute the difference between the elements found at the indexes.
+4. Skip the next index.
+5. Repeat step 1 to 4 until you reach the end of the loop.
+Algo2:
+1. Find and store the index which has an element lesser than the next element.(buy)
+2. Starting from the index found at step1, find and store the index which has an element greater than next index.(sell)
+3. Compute the difference between the elements found at the indexes.
+4. Skip the next index.
+5. Repeat step 1 to 4 until you reach the end of the loop.
+Algo3:
+1. Find and store the index which has an element lesser than the next element.(buy)
+2. Starting from the index+1 found at step1,store it as the index when you sell.(sell)
+3. Compute the difference between the elements found at the indexes.
+4. Skip the next index.
+5. Repeat step 1 to 4 until you reach the end of the loop.
 
+Return the answer which results in maximum profit among these 3 algo.
+
+"""
 
 class Solution(object):
     def maxProfit(self, prices):

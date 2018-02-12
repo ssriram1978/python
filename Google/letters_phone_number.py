@@ -11,6 +11,11 @@ Although the above answer is in lexicographical order, your answer could be in a
 """
 from collections import defaultdict
 from collections import deque
+"""
+Start from the end of the string and prepare a output list.
+Traverse the string backwards and pop the output list elements and append the the current string characters in a loop
+and push it back to the list.
+"""
 
 class Solution:
     def __init__(self):

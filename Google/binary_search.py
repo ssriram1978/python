@@ -1,3 +1,16 @@
+"""
+1. If you want to recurse, start from mid. Base case is if start > end, return False.
+   if mid is less than input, then look for the element between start and mid-1
+   if mid is greater than input, then look for the element between mid+1 and end
+   if mid is equal to input, then return True
+
+2. If you don't want to recurse, start a while loop until start < end
+    jump to mid.
+    if mid is less than input, then look for the element between start and mid-1
+   if mid is greater than input, then look for the element between mid+1 and end
+   if mid is equal to input, then return True
+"""
+
 def binary_search(sorted_list,input):
     isFound=False
     if sorted_list == None or input==None:

@@ -13,7 +13,13 @@ Output: 28
 
 Explanation: The maximum result is 5 ^ 25 = 28.
 """
-
+"""
+The idea is to first find the bunch of largest numbers with MSB set to 1.
+Prepare a bit mask of 1<<31. And this bit mask with the array of numbers to find the largest number.
+Once you found the largest or a bunch of numbers with MSB set to 1,
+the next step is to xor each of these largest numbers with the whole set to compute the largest xored output.
+O(n)
+"""
 
 class Solution:
     def __init__(self):

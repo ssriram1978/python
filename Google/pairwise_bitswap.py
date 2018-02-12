@@ -1,4 +1,9 @@
-
+"""
+convert an integer into binary form by invoking bin() and convert it into a string.
+Get rid off the 0b in front of the string to get the number in full binary form.
+start from the beginning and keep swapping pair of bits.
+return the output.
+"""
 def pairwise_bit_swap(input_number):
     if input_number == None:
         return

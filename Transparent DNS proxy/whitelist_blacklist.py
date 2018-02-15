@@ -13,6 +13,7 @@ import threading
 import time
 import requests
 
+
 command_to_show_acl="ip netns exec haproxy echo \"show acl #0\" | socat /var/run/haproxy/admin.sock stdio"
 command_to_add_acl="ip netns exec haproxy echo \"add acl #0 %s\" | socat /var/run/haproxy/admin.sock stdio"
 command_to_del_acl="ip netns exec haproxy echo \"del acl #0 %s\" | socat /var/run/haproxy/admin.sock stdio"
@@ -91,12 +92,23 @@ class acl_list:
         logging.debug("\nself.acl_ipaddr=")
         logging.debug(self.acl_ipaddr)
 
+    def validip(ip):
+        return ip.count('.') == 3 and  all(0<=int(num)<256 for num in ip.rstrip().split('.'))
+
     def read_list(self):
         #self.domain_name_to_ip={}
         self.domain_names = []
         with open(self.listname, "r") as ins:
             for line in ins:
                 domain_name=str(line.strip())
+                try:
+                    if validip(domain_name) == True:
+                        self.domain_name_to_ip[domain_name] = domain_name
+                        logging.debug("\nAdding IP address (%s) to the domain_name_to_ip list."%(domain_name))
+                except:
+                    #it is not an IP address.
+                    logging.debug("\nThe domain name is not an IP address.")
+
                 if len(domain_name) > 0:
                     self.add_doman_name_to_list(domain_name)
                     self.convert_dnsname_to_ip2(domain_name)
@@ -259,7 +271,7 @@ class acl_list:
             if match_found == False:
                 # del this ip from acl because this is stale.
                 self.delete_acl_ip(ipaddr_acl)
-                logging.warning('Deleted this stale IP %s from the acl in HAPROXY.' %(ipaddr_acl))
+                logging.warning('Deleted this stale IP %s from the acl in HAPROXY.' %(acl_ip))
 
 
     def perform_match(self):

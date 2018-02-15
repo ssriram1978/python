@@ -1,0 +1,22 @@
+
+def get_fibonacci_at_index(n):
+    a=0
+    b=1
+    if n==0:
+        return 0
+    elif n==1:
+        return 1
+    else:
+        count=1
+        while count <= n:
+            #compute the sum
+            c=a+b
+            #store b in a
+            a=b
+            #store c in b
+            b=c
+            count+=1
+        return a
+
+print(get_fibonacci_at_index(5))
+

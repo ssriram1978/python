@@ -7,6 +7,15 @@
 # Output: 7 -> 0 -> 8
 # Explanation: 342 + 465 = 807.
 
+"""
+Keep a pointer to each of the two singly linked list.
+As they are already in reverse order,
+sum the lsb. If there is a carry, just copy the lsb to a variable and keep the carry.
+Move the pointers to the next location and do the same as told in the previous step but remember to add the carry.
+Also, when you try to sum the current value to the previously computed value make sure to multiply the previous value by 10.
+Now having computed the final sum. Prepare a linked list with the final output converted to string and return.
+"""
+
 # Definition for singly-linked list.
 class ListNode:
     def __init__(self, x):

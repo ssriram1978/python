@@ -1,3 +1,8 @@
+"""
+# declare three nodes. current, previous, next
+# prev is used to keep track of the previous node in the while loop
+"""
+
 # Definition for singly-linked list.
 class ListNode:
     def __init__(self, x):

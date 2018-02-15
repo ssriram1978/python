@@ -7,15 +7,18 @@ import time
 import socket
 import fcntl
 from scapy.all import *
+import io
+import logging
 
-whitelist_blacklist_file_name="/home/ssridhar/PycharmProjects/python/whitelist_blacklist.txt"
+whitelist_blacklist_file_name="/home/istguser1/whitelist_blacklist2.txt"
+dns_query_names="/home/istguser1/dnsq.txt"
 
 PORT=53
 BUFSIZE = 1024
 IP_TRANSPARENT=19
 IP_FREEBIND=15
 IP_BINDANY=24
-MAC_OF_BBI_NEXT_HOP="44:03:a7:11:98:81"
+MAC_OF_BBI_NEXT_HOP="e4:d3:f1:fc:75:00"
 MAC_OF_DNS_CONT="60:00:00:00:00:00"
 
 def match_dns_query_name_with_whitelist_blacklist(data):
@@ -96,11 +99,11 @@ def server():
 
 
 def sniff_packet(pkt):
-    print("Rcvd pkt:")
-    print(hexdump(pkt))
+    #logging.debug("Rcvd pkt:")
+    #logging.debug(hexdump(pkt))
 
     if (pkt[Ether].dst != MAC_OF_DNS_CONT):
-        #print("Discarding this packet because dest mac does not match this host.")
+        #logging.debug("Discarding this packet because dest mac does not match this host.")
         return
 
     if IP in pkt:
@@ -110,68 +113,103 @@ def sniff_packet(pkt):
         udp_sport = pkt[UDP].sport
         udp_dport = pkt[UDP].dport
 
-        try:
+        #try:
+        if 1:
             if udp_dport == 53:
-                print(" IP src " + str(ip_src) + " UDP sport " + str(udp_sport))
-                print(" IP dst " + str(ip_dst) + " UDP dport " + str(udp_dport))
+                #logging.debug(" IP src " + str(ip_src) + " UDP sport " + str(udp_sport))
+                #logging.debug(" IP dst " + str(ip_dst) + " UDP dport " + str(udp_dport))
                 #print("pkt[UDP].payload=%s\n" % (pkt[UDP].payload))
                 request = DNSRecord.parse(bytes(pkt[UDP].payload))
 
-                print("request=%s\n" % (str(request)))
+                #logging.debug("request=%s\n" % (str(request)))
                 qname = str(request.q.qname).strip('.')
-                print("qname=%s\n"%(qname))
-                print("request.header.id=%d\n" % (request.header.id))
+                #logging.debug("Domain name got from the DNS request =%s\n"%(qname))
+                #logging.debug("request.header.id=%d\n" % (request.header.id))
 
-                if qname in open(whitelist_blacklist_file_name).read():
-                    DNS_resp=DNS()
-                    DNS_resp.id=request.header.id
-                    DNS_resp.qr=1
-                    DNS_resp.opcode = 2
-                    #DNS_resp.rcode=0
-                    DNS_resp.rcode=9
-                    DNS_resp.qd=DNSQR(qname=qname)
-                    DNS_resp.an=DNSRR(rrname=qname,type=16,rclass=1,ttl=3600,rdata='From VISP: Content restricted.')
-                    #DNS_resp.an=DNSRR(rrname=qname,type=1,rclass=1,ttl=3600,rdata='151.101.129.67')
-                    #DNS_resp.an=DNSRR(rrname=qname,type=1,rclass=1,ttl=3600,rdata='127.0.0.1')
-                    
-                    response = DNSRecord.parse(bytes(DNS_resp))
-                    dns_response_packet = Ether(src=pkt[Ether].dst,dst=pkt[Ether].src) /\
+                open(dns_query_names,'a+').write(qname + '\n')
+
+                match_found=False
+
+                dns_reject=False
+                dns_redirect_to_static_webpage=True
+
+                for line in open(whitelist_blacklist_file_name) :
+                    line=line.strip('\n')                    
+                    if line in qname:
+                        DNS_resp=DNS()
+                        DNS_resp.id=request.header.id
+                        DNS_resp.qr=1
+                        DNS_resp.aa=1
+                        DNS_resp.ra=1
+                        #DNS_resp.opcode = 2
+                        DNS_resp.rcode=0
+                        #DNS_resp.rcode=5
+                        DNS_resp.qd=DNSQR(qname=qname)
+                        #DNS_resp.an=DNSRR(rrname=qname,type=16,rclass=1,ttl=3600,rdata='From VISP: Content restricted.')
+                        #DNS_resp.an=DNSRR(rrname=qname,type=1,rclass=1,ttl=3600,rdata='151.101.129.67')
+                        if dns_reject ==True:
+                            DNS_resp.an = DNSRR(rrname=qname, type=16, rclass=1, ttl=3600,
+                                                rdata='From VISP: Content restricted.')
+                            logging.debug(
+                                "line=%s and qname=%s match.Composing and sending DNS Reject (%s).\n"
+                                %(line, qname, ip_addr))
+                        elif dns_redirect_to_static_webpage == True:
+                            ip_addr="10.2.40.164"
+                            DNS_resp.an=DNSRR(rrname=qname,type="A",rclass=1,ttl=120,rdata=ip_addr)
+                            logging.debug(
+                            "line=%s and qname=%s match.Composing and sending DNS response "
+                            "pointing to a web server (%s).\n"
+                            %(line, qname, ip_addr))
+
+                        #response = DNSRecord.parse(bytes(DNS_resp))
+                        dns_response_packet = Ether(src=pkt[Ether].dst,dst=pkt[Ether].src) /\
                                           IP(src=str(ip_dst), dst=str(ip_src)) / \
                                           UDP(sport=udp_dport, dport=udp_sport) / \
                                           DNS_resp
-                    print("Composing and sending DNS Reject response pkt:")
-                    print(hexdump(dns_response_packet))
-                    sendp(dns_response_packet,loop=False,realtime=True,iface='DNSCONT',verbose=True)
-                else:
+
+                        #logging.debug(hexdump(dns_response_packet))
+                        sendp(dns_response_packet,loop=False,realtime=True,iface='DNSCONT',verbose=False)
+                        match_found=True
+                        break
+
+                if match_found == False:
                     #leave the packet untouched.
-                        dns_req = Ether(src=pkt[Ether].src,dst=MAC_OF_BBI_NEXT_HOP)/ \
+                    dns_req = Ether(src=pkt[Ether].src,dst=MAC_OF_BBI_NEXT_HOP)/ \
                                   IP(src=str(pkt[IP].src), dst=str(pkt[IP].dst)) / \
                                   UDP(sport=pkt[UDP].sport, dport=pkt[UDP].dport) / \
                                   bytes(pkt[UDP].payload)
 
-                        print("Composing and forwarding DNS request to the original dest.\n")
-                        print(hexdump(dns_req))
-                        sendp(dns_req,loop=False,realtime=True,iface='DNSCONT',verbose=True)
-
-
+                    logging.debug("Composing and forwarding DNS request for domain name =%s to the original dest.\n" %(qname))
+                    #logging.debug(hexdump(dns_req))
+                    sendp(dns_req,loop=False,realtime=True,iface='DNSCONT',verbose=False)
             else:
                 #leave the packet untouched.
-                print("Received a packet with UDP sport=%s and UDP dport=%s.\n" %(str(udp_sport),str(udp_dport)))
+                #logging.debug("Received a packet with UDP sport=%s and UDP dport=%s.\n" %(str(udp_sport),str(udp_dport)))
                 orig_request = Ether(src=pkt[Ether].src, dst=MAC_OF_BBI_NEXT_HOP) / \
                             IP(src=str(pkt[IP].src), dst=str(pkt[IP].dst)) / \
                             UDP(sport=pkt[UDP].sport, dport=pkt[UDP].dport) / \
                             bytes(pkt[UDP].payload)
-                print(hexdump(orig_request))
-                sendp(orig_request, loop=False, realtime=True, iface='DNSCONT', verbose=True)
+                #logging.debug(hexdump(orig_request))
+                sendp(orig_request, loop=False, realtime=True, iface='DNSCONT',verbose=False)
 
 
-        except:
-            sys_exec_info = sys.exc_info()[0]
-            logging.error("Unexpected error:%s" % (sys_exec_info))
+        #except:
+        #    sys_exec_info = sys.exc_info()[0]
+        #    logging.error("Unexpected error:%s" % (sys_exec_info))
 
-
+logging.basicConfig(format='(%(threadName)-2s:'
+                                       '%(levelname)s:'
+                                       '%(asctime)s:'
+                                       '%(lineno)d:'
+                                       '%(filename)s:'
+                                       '%(funcName)s:'
+                                       '%(message)s',
+                                datefmt='%m/%d/%Y %I:%M:%S %p',
+                                filename='dns_server_10_136_5_60.log',
+                                level=logging.DEBUG)
 
 sniff(iface='DNSCONT',filter='udp and port 53',prn=sniff_packet,store=False)
 #sniff(iface='DNSCONT',filter='udp',prn=sniff_packet,store=False)
+
 
 #server()

@@ -1,16 +1,17 @@
 """
-Given an array and a value, find if there is a triplet in array whose sum is equal to the given value.
-If there is such a triplet present in array, then print the triplet and return true. Else return false.
-For example, if the given array is {12, 3, 4, 1, 6, 9} and given sum is 24,
-then there is a triplet (12, 3 and 9) present in array whose sum is 24.
+Given an array S of n integers, are there elements a, b, c in S such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
 
-Time complexity of the method 1 is O(n^3).
-The complexity can be reduced to O(n^2) by sorting the array first, and then using method 1 of this post in a loop.
-1) Sort the input array.
-2) Fix the first element as A[i] where i is from 0 to array size – 2.
-After fixing the first element of triplet, find the other two elements using method 1 of this post.
+Note: The solution set must not contain duplicate triplets.
 
+For example, given array S = [-1, 0, 1, 2, -1, -4],
+
+A solution set is:
+[
+  [-1, 0, 1],
+  [-1, -1, 2]
+]
 """
+
 
 class Solution:
     def threeSum(self, nums):

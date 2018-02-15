@@ -17,7 +17,7 @@ command_to_show_acl="ip netns exec haproxy echo \"show acl #0\" | socat /var/run
 command_to_add_acl="ip netns exec haproxy echo \"add acl #0 %s\" | socat /var/run/haproxy/admin.sock stdio"
 command_to_del_acl="ip netns exec haproxy echo \"del acl #0 %s\" | socat /var/run/haproxy/admin.sock stdio"
 
-whitelist_file_name="/home/ssridhar/PycharmProjects/python/whitelist_blacklist.txt"
+whitelist_file_name="/home/istguser1/whitelist_blacklist.txt"
 
 class acl_list:
     def __init__(self,listname,add_command,del_command,show_command,loglevel):
@@ -259,7 +259,7 @@ class acl_list:
             if match_found == False:
                 # del this ip from acl because this is stale.
                 self.delete_acl_ip(ipaddr_acl)
-                logging.warning('Deleted this stale IP %s from the acl in HAPROXY.' %(acl_ip))
+                logging.warning('Deleted this stale IP %s from the acl in HAPROXY.' %(ipaddr_acl))
 
 
     def perform_match(self):

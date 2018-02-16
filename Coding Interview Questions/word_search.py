@@ -71,15 +71,95 @@ While is_match_found==False or character_index reached the end of the character,
                 
 return is_match_found
 """
+from collections import defaultdict
 
 class Solution(object):
+    def search_word_in_board(self,board,word,word_index,row,column):
+
+        #base case.
+        if board == None or word == None:
+            return []
+        if row < 0 or row >= len(board) or column < 0 or column >= len(board[0]) or word_index >= len(word):
+            return []
+
+        #define a temporary array to capture all the characters found.
+        char_found_list = []
+
+        #check if the character at the current location in the word matches with the character at the given location in the board.
+        if word[word_index] == board[row][column]:
+            #match found
+            print("Character match %c found."%(word[word_index]))
+            char_found_list.append(word[word_index])
+            #since the same board character cannot be looped back again, mask the character to say $
+            #this is for the check to fail when the same character on the board is looked up.
+            temp_storage=board[row][column]
+            board[row][column]='$'
+            #move to the next character
+            if word_index==len(word)-1:
+                #you reached the end
+                print("You reached the end. Complete match found.")
+                return char_found_list
+            else:
+                char_list=[]
+                print("Searching for the char %c on the right side of the board" % (word[word_index + 1]))
+                #search for the next character in the word on the right side of the current character in board
+                char_list=self.search_word_in_board(board,word,word_index+1,row,column+1)
+                if char_list == []:
+                    print("Searching for the char %c on the left side of the board" % (word[word_index + 1]))
+                    # search for the next character in the word on the left side of the current character in board
+                    char_list=self.search_word_in_board(board,word,word_index+1,row,column-1)
+                    if char_list == []:
+                        print("Searching for the char %c on the top of the board" % (word[word_index + 1]))
+                        # search for the next character in the word on the top of the current character in board
+                        char_list=self.search_word_in_board(board,word,word_index+1,row-1,column)
+                        if char_list == []:
+                            print("Searching for the char %c on the bottom of the board" % (word[word_index + 1]))
+                            # search for the next character in the word on the bottom of the current character in board
+                            char_list=self.search_word_in_board(board,word,word_index+1,row+1,column)
+                #check if the char_list is empty
+                if char_list == []:
+                    #reset the char_found_list to []
+                    print("No match found, resetting the list to empty")
+                    char_found_list=[]
+                    #remember to restore the temp char mask to original value
+                    board[row][column] = temp_storage
+                    return char_found_list
+                else:
+                    #append the char list to the original char_found_list
+                    print("appending" + str(char_list) + "to the original list" + str(char_found_list))
+                    char_found_list.extend(char_list)
+                    print(char_found_list)
+                    # remember to restore the temp char mask to original value
+                    board[row][column] = temp_storage
+                    return char_found_list
+        else:
+            char_found_list=[]
+            return char_found_list
+
+
     def exist(self, board, word):
         """
         :type board: List[List[str]]
         :type word: str
         :rtype: bool
         """
+        char_found_list=[]
+        match_found=False
+        for row in range(len(board)):
+            for column in range(len(board[0])):
+                char_found_list = self.search_word_in_board(board, word, 0, row, column)
+                if char_found_list != []:
+                    print("Returning " + str(char_found_list))
+                    match_found=True
+                    break
+            if match_found==True:
+                break
 
+        if match_found==False:
+            return False
+        else:
+            print(char_found_list)
+            return True
 
 board =[
   ['A','B','C','E'],
@@ -87,4 +167,5 @@ board =[
   ['A','D','E','E']
 ]
 sol=Solution()
-sol.exist(board,"DECFB")
+print("Search for BCESCEE returned "+ str(sol.exist(board,"BCESCEE")))
+print("Search for BCESCEES returned "+ str(sol.exist(board,"BCESCEES")))

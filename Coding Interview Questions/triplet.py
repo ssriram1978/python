@@ -4,43 +4,77 @@ Given an array and a value, find if there is a triplet in array whose sum is equ
 If there is such a triplet present in array, then print the triplet and return true. Else return false.
 For example, if the given array is {12, 3, 4, 1, 6, 9} and given sum is 24,
 then there is a triplet (12, 3 and 9) present in array whose sum is 24.
-
-Time complexity of the method 1 is O(n^3).
-The complexity can be reduced to O(n^2) by sorting the array first, and then using method 1 of this post in a loop.
-1) Sort the input array.
-2) Fix the first element as A[i] where i is from 0 to array size – 2.
-After fixing the first element of triplet, find the other two elements using method 1 of this post.
-
 """
+"""
+Algorithm:
+----------
+Sort the input array. o(n*logn) - Merge sort.
+Define an output list=[]
 
+Define an output hash table that contains the triplets indexed by each element as the key.
+Example if the possible match is (0,2,4), then there will be 3 such key value pairs:
+key=0 value=(0,2,4)
+key=2 value=(0,2,4)
+key=4 value=(0,2,4)
+This is done to eliminate duplicate triplets like (0,2,4) (2,0,4) and (4,2,0) and use hashtable for o(1) lookups.
+ 
+Start a loop that iterates over all the elements o(n)
+    set left=0
+    set right=length of array-1
+    
+    while left < right: o(n)
+        check if array[current_index]+ array[left]+ array[right] == sum:
+            If true, append it to the output list.
+        else check if array array[current_index]+ array[left]+ array[right] < sum:
+            Increment the left index by 1
+        else
+            Decrement the right index by 1
+        
+        If current index is equal to left, increment left by 1.
+        If current index is equal to right, decrement right by 1.
+            
+return the output_list
 
-# Python3 program to find a triplet
-# that sum to a given value
+This algorithm runs at order of n**2.
+"""
+class Solution:
+    def find3Numbers(self,array,sum):
+        if array==None or array==[]:
+            return None
+        #sort the input array o(n*log(n))
+        sorted_array=sorted(array)
+        output_array=[]
+        for current_index in range(len(sorted_array)):
+            left=0
+            right=len(sorted_array)-1
 
-# returns true if there is triplet with
-# sum equal to 'sum' present in A[].
-# Also, prints the triplet
-def find3Numbers(A, arr_size, sum):
-    # Fix the first element as A[i]
-    for i in range(0, arr_size - 2):
+            while left < right:
+                #make sure that the 3 elements are unique.
+                if left == current_index:
+                    left+=1
+                if right == current_index:
+                    right-=1
+                #compute the sum of all 3 elements.
+                computed_sum=sorted_array[current_index]+sorted_array[left]+sorted_array[right]
+                if computed_sum == sum:
+                    #match found.
+                    output_array.append((sorted_array[current_index],sorted_array[left],sorted_array[right]))
+                    left+=1
+                    right-=1
+                elif computed_sum < sum:
+                    #move left by one position
+                    left+=1
+                else:
+                    #move right by one position
+                    right-=1
+                # make sure that the 3 elements are unique.
+                if left == current_index:
+                    left += 1
+                if right == current_index:
+                    right -= 1
+        return output_array
 
-        # Fix the second element as A[j]
-        for j in range(i + 1, arr_size - 1):
-
-            # Now look for the third number
-            for k in range(j + 1, arr_size):
-                if A[i] + A[j] + A[k] == sum:
-                    print("Triplet is", A[i],
-                          ",", A[j], ",", A[k])
-                    return True
-
-    # If we reach here, then no
-    # triplet was found
-    return False
-
-
+sol=Solution()
 # Driver program to test above function
-A = [1, 4, 45, 6, 10, 8]
-sum = 22
-arr_size = len(A)
-find3Numbers(A, arr_size, sum)
+A = [9,8,7,6,5,4,3,2,1,0]
+print(sol.find3Numbers(A,6))

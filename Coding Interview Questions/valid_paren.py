@@ -1,6 +1,20 @@
 #Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
 #The brackets must close in the correct order, "()" and "()[]{}" are all valid but "(]" and "([)]" are not.
 
+"""
+Algorithm:
+----------
+    Maintain a stack.
+    Create a dictionary with the key as the opening ( or { or [ and the element as the closing ) or } or ].
+    For every character in the input string, do the following:
+        If the element is in the dict key, push the element to the stack.
+        If the element is not in the dict key, pop the element from the stack and check if value
+        of the popped element when looked up in the dict matches with the current element.
+            If they do not match, return false.
+            If they match, then, continue with the next character.
+    Return the final output.
+ """
+
 from collections import defaultdict
 
 class Solution:
@@ -12,14 +26,6 @@ class Solution:
         dict_container_pairs=defaultdict(str)
         dict_container_pairs={'(':')','{':'}','[':']'}
         isValidString=False
-        """
-        1. Maintain a stack.
-        2. Check if the element is in the dict. If not, push the first element to the stack.
-        3. If the element is in the dict, pop the element from the stack and check if they match.
-        4. If they do not match, return false.
-        5. If they match, then, continue with the next character.
-        6. Return the final output.
-        """
         #print(dict_container_pairs)
         container_stack=[]
         index=0

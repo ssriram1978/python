@@ -19,7 +19,8 @@ word = "ABCB", -> returns false.
 """
 """
 Iterative algorithm:
-This is the way to go because
+---------------------
+DFS (Depth First Search) This is the way to go because
 For every search, backtracking is needed because every path and every combination need to be
 analyzed for a possible match.
 Example: string "abc" matched successfully but the next character did not match. In this case,

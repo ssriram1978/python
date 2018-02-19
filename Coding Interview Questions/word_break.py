@@ -13,6 +13,17 @@ UPDATE (2017/1/4):
 The wordDict parameter had been changed to a list of strings (instead of a set of strings).
 Please reload the code definition to get the latest changes.
 """
+"""
+Algorithm:
+----------
+Add all wordDict to a dictionary.
+Starting at index 0 search for a character or a bunch of characters in dictionary.
+Keep accumulating characters and perform a lookup until you find a match.
+Split the word right at the point you found a match.
+Perform a lookup of the remaining word in the dictionary.
+If you did not find the remaining word, then, repeat the steps 2 to 4 until you find a match.
+Repeat this until you reach the end of the input string.
+"""
 
 from collections import defaultdict
 
@@ -24,15 +35,6 @@ class Solution:
         :rtype: bool
         """
         isMatch=False
-        """
-        1. Add all wordDict to a dictionary.
-        2. Starting at index 0 search for a character or a bunch of characters in dictionary.
-        3. Keep accumulating characters and perform a lookup until you find a match.
-        4. Split the word right at the point you found a match.
-        5. Perform a lookup of the remaining word in the dictionary.
-        6. If you did not find the remaining word, then, repeat the steps 2 to 4 until you find a match.
-        7. Repeat this until you reach the end of the input string.
-        """
         #add words to the dictionary
         word_dict=defaultdict(int)
         for words in wordDict:

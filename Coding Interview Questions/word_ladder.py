@@ -25,7 +25,9 @@ Please reload the code definition to get the latest changes.
 
 """
 """
-Perform a DFS on the wordlist by searching the beginword with each word in the wordlist.
+Algorithm:
+----------
+Perform a BFS (Breadth First Search) on the wordlist by searching the beginword with each word in the wordlist.
 Enqueue the beginword into the wordlist and increment a counter by 1.
 Start a while loop that iterates while the list is not empty:
     In this while loop, do the following.

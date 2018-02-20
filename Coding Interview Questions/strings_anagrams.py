@@ -5,50 +5,50 @@ Example:
     string2 = abcghij
     unmatched count= 5 (def ij)
 
->>> unmatched_alphabet_count("abcdefgh","abcghij")
+#>>> unmatched_alphabet_count("abcdefgh","abcghij")
 5
 """
+
+"""
+Algorithm:
+----------
+Create a dictionary for the first string with key as each character in the string and value as the count.
+Declare unmatched_count to be 0
+For every character in the second string:
+    Check if the character is present in the dictionary:
+        If it is not present, then increment a unmatched_count by 1
+        Else
+        Delete the element from the dictionary
+return unmatched_count+length of dictionary
+        
+"""
+from collections import defaultdict
+
 def unmatched_alphabet_count(a, b):
-    dictionary_a = {}
-    dictionary_b = {}
-    total_unmatched_count = 0
-    for index in range(len(a)):
-        count = dictionary_a.get(a[index])
-        if count == None:
-            count = 1
+    unmatched_count=0
+    dictionary_of_char_from_a=defaultdict(int)
+    for character in a:
+        dictionary_of_char_from_a[character]+=1
+    for character in b:
+        if dictionary_of_char_from_a[character] <= 0:
+            unmatched_count+=1
+            del dictionary_of_char_from_a[character]
         else:
-            count += 1
-        dictionary_a[a[index]] = count
-    #print(dictionary_a)
+            del dictionary_of_char_from_a[character]
 
-    for index in range(len(b)):
-        count = dictionary_b.get(b[index])
-        if count == None:
-            count = 1
-        else:
-            count += 1
-        dictionary_b[b[index]] = count
-    #print(dictionary_b)
-
-    for key, value in dictionary_a.items():
-        if dictionary_b.get(key) == None:
-            total_unmatched_count += value
-
-    for key, value in dictionary_b.items():
-        if dictionary_a.get(key) == None:
-            total_unmatched_count += value
-
-    return total_unmatched_count
+    print(dictionary_of_char_from_a)
+    print(unmatched_count)
+    return unmatched_count + len(dictionary_of_char_from_a)
 
 
 #a = input().strip().split(' ')
 #b = input().strip().split(' ')
 
-a = input().strip()
-b = input().strip()
+#a = input().strip()
+#b = input().strip()
 
-print(unmatched_alphabet_count(a, b))
+print(unmatched_alphabet_count("abcdefgh","abcghij"))
 
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
+#if __name__ == "__main__":
+#    import doctest
+#    doctest.testmod()

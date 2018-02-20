@@ -32,6 +32,8 @@ def unmatched_alphabet_count(a, b):
     for character in b:
         if dictionary_of_char_from_a[character] <= 0:
             unmatched_count+=1
+            #for a defaultdict when you search for an element,
+            # it automatically adds the element with index 0 if the item is not there in the dict.
             del dictionary_of_char_from_a[character]
         else:
             del dictionary_of_char_from_a[character]

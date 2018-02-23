@@ -168,12 +168,22 @@ class Codec:
         """
         if data == None or data == "":
             return
+        bst=BST()
+
         tree_list=data.strip().split()
-        print(tree_list)
+        for index in range(len(tree_list)):
+            if tree_list[index]=="null":
+                continue
+            else:
+                node_val=int(tree_list[index])
+                bst.addNodeToBST(node_val)
+        return bst
 
 # Your Codec object will be instantiated and called as such:
 codec = Codec()
 string_tree=codec.serialize(bst.getHead())
 print(string_tree)
-print(codec.deserialize(string_tree))
+codec2=Codec()
+bst2=codec2.deserialize(string_tree)
+print("Deserialized bst="+ codec2.serialize((bst2.getHead())))
 #codec.deserialize(codec.serialize(root))

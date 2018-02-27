@@ -26,15 +26,112 @@ Your serialize and deserialize algorithms should be stateless.
 
 """
 """
-perform a breadth first search and keep writing the content of the elements into a list and return it.
+For serializing a binrary tree, 
+    perform a breadth first search and keep writing the content of the elements into a string and return the string.
+For de-serializing a binrary tree, 
+    Perform a depth first 
 """
 
+from collections import deque
+
 # Definition for a binary tree node.
-# class TreeNode(object):
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+class BST:
+    def __init__(self):
+        self.root=None
+
+    def addNodeToBSTRecurse(self,node,value):
+        if node == None:
+            return TreeNode(value)
+        if value <= node.val:
+            node.left=self.addNodeToBSTRecurse(node.left,value)
+        else:
+            node.right = self.addNodeToBSTRecurse(node.right, value)
+        return node
+
+    def addNodeToBST(self, value):
+        if self.root == None:
+            self.root=TreeNode(value)
+            return
+        self.root = self.addNodeToBSTRecurse(self.root,value)
+
+    def getHead(self):
+        return self.root
+
+
+    def printBSTInorderRecurse(self,node):
+        if node == None:
+            return None
+        output_list=[]
+        left_list=self.printBSTInorderRecurse(node.left)
+        if left_list != None:
+            output_list.extend(left_list)
+        output_list.append(node.val)
+        right_list = self.printBSTInorderRecurse(node.right)
+        if right_list != None:
+            output_list.extend(right_list)
+        return output_list
+
+    def printBSTPreorderRecurse(self, node):
+        if node == None:
+            return None
+        output_list = []
+        output_list.append(node.val)
+        left_list = self.printBSTPreorderRecurse(node.left)
+        if left_list != None:
+            output_list.extend(left_list)
+        right_list = self.printBSTPreorderRecurse(node.right)
+        if right_list != None:
+            output_list.extend(right_list)
+        return output_list
+
+    def printBST(self):
+        print(self.printBSTInorderRecurse(self.root))
+        print(self.printBSTPreorderRecurse(self.root))
+
+
+bst=BST()
+"""
+      9
+    /   \
+   1     10
+  / \   /  \
+null 2 null 20
+    / \     / \
+null   8   11  null
+      / \
+     3   null
+    / \
+ null  4
+      / \
+   null  7
+        / \
+       5  null
+      / \
+    null 6
+        / \
+    null  null
+"""
+
+bst.addNodeToBST(9)
+bst.addNodeToBST(1)
+bst.addNodeToBST(2)
+bst.addNodeToBST(8)
+bst.addNodeToBST(3)
+bst.addNodeToBST(4)
+bst.addNodeToBST(7)
+bst.addNodeToBST(5)
+bst.addNodeToBST(6)
+bst.addNodeToBST(10)
+bst.addNodeToBST(20)
+bst.addNodeToBST(11)
+
+print(bst.printBST())
 
 class Codec:
     def serialize(self, root):
@@ -43,6 +140,25 @@ class Codec:
         :type root: TreeNode
         :rtype: str
         """
+        if root == None:
+            return
+        serialize_queue=deque()
+
+        output_string=""
+        serialize_queue.append(root)
+        while len(serialize_queue) > 0:
+            #dequeue and process the elements
+            node = serialize_queue.popleft()
+            if node == None:
+                #append null to the output queue.
+                output_string+="null" + " "
+            else:
+                #Append the content of the node to the output queue.
+                output_string += str(node.val) + " "
+                #enqueue the child nodes to the serialize queue
+                serialize_queue.append(node.left)
+                serialize_queue.append(node.right)
+        return output_string
 
     def deserialize(self, data):
         """Decodes your encoded data to tree.
@@ -50,8 +166,24 @@ class Codec:
         :type data: str
         :rtype: TreeNode
         """
+        if data == None or data == "":
+            return
+        bst=BST()
 
+        tree_list=data.strip().split()
+        for index in range(len(tree_list)):
+            if tree_list[index]=="null":
+                continue
+            else:
+                node_val=int(tree_list[index])
+                bst.addNodeToBST(node_val)
+        return bst
 
-        # Your Codec object will be instantiated and called as such:
-        # codec = Codec()
-        # codec.deserialize(codec.serialize(root))
+# Your Codec object will be instantiated and called as such:
+codec = Codec()
+string_tree=codec.serialize(bst.getHead())
+print(string_tree)
+codec2=Codec()
+bst2=codec2.deserialize(string_tree)
+print("Deserialized bst="+ codec2.serialize((bst2.getHead())))
+#codec.deserialize(codec.serialize(root))

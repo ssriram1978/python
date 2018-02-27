@@ -7,6 +7,14 @@ You are given a target value to search. If found in the array return its index, 
 
 You may assume no duplicate exists in the array.
 """
+
+"""
+1. First find the pivot point.
+    In order to find the pivot point, perform a binary search with the following condition:
+2. Perform Binary search on the left array of the pivot.
+3. Perform Binary search on the right array of the pivot.
+"""
+
 class Solution(object):
     def search(self, nums, target):
         """

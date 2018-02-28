@@ -11,8 +11,32 @@ You may assume no duplicate exists in the array.
 """
 1. First find the pivot point.
     In order to find the pivot point, perform a binary search with the following condition:
-2. Perform Binary search on the left array of the pivot.
-3. Perform Binary search on the right array of the pivot.
+    Start a while loop with the condition while start < end:
+    mid=start+(end-start)//2
+    if array[mid] > arr[mid+1]:
+        you found the pivot point. (mid)
+        return it.
+    else if array[mid] < arr[mid-1]:
+        you found the pivot point. (mid-1)
+        return it
+    If you found that array[start] is greater than array[mid],
+        then the pivot has to be between start and mid
+            end=mid-1
+    Else if you found that array[mid] is less than array[end]
+        then the pivot has to be between mid and end.
+        start=mid+1
+    If you did not find any pivot, then, return -1
+    
+2. If you did not find any pivot, then 
+        Perform Binary search on the whole array O(logn).
+   Else:
+        If target is equal to the content located at pivot,
+            then return True.
+        If the target value is greater than the content located at pivot
+            If so, Perform Binary search with start=0 end=pivot-1.
+            Else:
+                Perform Binary search with start=pivot+1,end=len(array)-1
+If you found the element, return True else return False
 """
 
 class Solution(object):

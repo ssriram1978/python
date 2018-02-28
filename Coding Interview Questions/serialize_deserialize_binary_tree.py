@@ -26,10 +26,23 @@ Your serialize and deserialize algorithms should be stateless.
 
 """
 """
-For serializing a binrary tree, 
-    perform a breadth first search and keep writing the content of the elements into a string and return the string.
-For de-serializing a binrary tree, 
-    Perform a depth first 
+For serializing a binary tree which for this context is a Binary Search Tree, 
+    perform a Breadth First Search (pre-order traversal).
+     Push the root into a stack.
+     While stack is not empty:
+        Pop an element from the stack.
+        If the element is None, append "null" to the output string.
+        Else:
+            Append the node's value to the output string.
+            Push the left child to the stack.
+            Push the right child to the stack.
+    Return the string.
+For de-serializing a binary tree, 
+    Read the input string into a list split by " ".
+    For every element in the list:
+        If the word is "null", then, skip this word.
+        Else
+        Insert the word into a Binary Search Tree.
 """
 
 from collections import deque

@@ -45,3 +45,29 @@ class Solution(object):
         :type x: int
         :rtype: int
         """
+        if type(x) != int or x==0:
+            return -1
+        if x==1:
+            return 1
+        square_root=-1
+        start=0
+        end=x//2
+        while start <= end:
+            mid=start+(end-start)//2
+            if mid**2==x:
+                square_root=mid
+                break
+            elif mid**2 > x:
+                end=mid-1
+            else:
+                start=mid+1
+        
+        if square_root==-1:
+            square_root=min(start,end)
+            
+        return square_root
+sol=Solution()
+print(sol.mySqrt(82))
+
+
+

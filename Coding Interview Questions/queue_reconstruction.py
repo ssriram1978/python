@@ -18,13 +18,16 @@ Output:
 """
 
 """
-sort the array based on height and save it in a sorted stack.
-create a dummy stack with all zeros of size input.
-in a loop that runs until there are no elements in the sorted stack
-    pop all elements which have the same height from the sorted stack
-    let h be the location of the element popped from the stack.
-    if item in dummy stack is 0, then, replace it with the element popped from the stack.
-    if item in dummy stack is non zero, then, insert the popped element at this location.
+Sort the array based on height in descending order and save it in a sorted stack.
+Create an output stack with all zeros of length sizeof array.
+For every element in the sorted stack:
+    Extract the location (second sub-element) from the element.
+    If there are no items in the output stack at the desired location:
+        Just replace 0 with this current element
+    Else
+        Insert this current element into the output stack at the desired location.
+        This would result in a right shift of the sorted stack so do a pop() to get rid off the item which is 0.
+Return the output stack.
 """
 #[7,0],[7,1]
 #[7,0],[6,1],[7,1]
@@ -43,7 +46,7 @@ for index in range(len(sort_based_on_height)):
     else:
         #insert this person at the specified location which is the total number of persons standing before him.
         stack_of_people.insert(people[1],people)
-        #make sure to remove the trailing zero in the stack because you already inserted an element which 
+        #make sure to remove the trailing zero in the stack because you already inserted an element which
         #caused the zeros to right shift in the list.
         stack_of_people.pop()
     print(stack_of_people)

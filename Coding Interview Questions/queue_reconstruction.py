@@ -16,16 +16,12 @@ Input:
 Output:
 [[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]
 """
-from collections import deque
 
-input=[[7,0],[4,4],[7,1],[5,0],[6,1],[5,2]]
-
-sort_based_on_height=sorted(input,key=lambda x: x[0],reverse=True)
 """
 sort the array based on height and save it in a sorted stack.
 create a dummy stack with all zeros of size input.
 in a loop that runs until there are no elements in the sorted stack
-    pop all element which have the same height from the sorted stack
+    pop all elements which have the same height from the sorted stack
     let h be the location of the element popped from the stack.
     if item in dummy stack is 0, then, replace it with the element popped from the stack.
     if item in dummy stack is non zero, then, insert the popped element at this location.
@@ -34,14 +30,21 @@ in a loop that runs until there are no elements in the sorted stack
 #[7,0],[6,1],[7,1]
 #[5,0],[7,0],[5,2],[6,1],[7,1]
 #[[5,0],[7,0],[5,2],[6,1],[4,4],[7,1]
+from collections import deque
+input=[[7,0],[4,4],[7,1],[5,0],[6,1],[5,2]]
+sort_based_on_height=sorted(input,key=lambda x: x[0],reverse=True)
 print(sort_based_on_height)
 stack_of_people=[0]*len(sort_based_on_height)
 for index in range(len(sort_based_on_height)):
     people=sort_based_on_height[index]
+    #if there are no persons at the specified location, then, make the person stand at the specified location.
     if stack_of_people[people[1]]==0:
         stack_of_people[people[1]]=people
     else:
+        #insert this person at the specified location which is the total number of persons standing before him.
         stack_of_people.insert(people[1],people)
+        #make sure to remove the trailing zero in the stack because you already inserted an element which 
+        #caused the zeros to right shift in the list.
         stack_of_people.pop()
     print(stack_of_people)
 

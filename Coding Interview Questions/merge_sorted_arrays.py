@@ -6,7 +6,10 @@ You may assume that nums1 has enough space (size that is greater or equal to m +
 additional elements from nums2.
 The number of elements initialized in nums1 and nums2 are m and n respectively.
 """
-
+"""
+For every element in nums2, perform a binary search in nums1 and insert the element in nums1 at the right position.
+O(mlogn)
+"""
 
 class Solution(object):
     def merge(self, nums1, m, nums2, n):

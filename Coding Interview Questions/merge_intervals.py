@@ -6,6 +6,18 @@ Given [1,3],[2,6],[8,10],[15,18],
 return [1,6],[8,10],[15,18].
 
 """
+"""
+Sort the list based upon start time.
+Start a loop while you haven't reached the end of the list:
+    Check if the next (start,end) overlaps with current (start,end)
+    If so, then, 
+        merge them into one 
+        delete both the items from the list and 
+        replace the new one at this location in the list.
+        Make this new item as the current item.
+    Else:
+        move the current item as the next item.
+"""
 
 """
 1. Sort the intervals based on increasing order of 

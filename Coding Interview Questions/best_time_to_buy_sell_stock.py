@@ -15,6 +15,17 @@ Output: 0
 In this case, no transaction is done, i.e. max profit = 0.
 """
 
+"""
+Start a loop that iterates from the beginning to the end of the list.
+In this loop, 
+    Find the lowest dip. (current is lowest and current + 1 is greater than current)
+If you found the lowest dip,
+Start another loop from the lowest dip point.
+    In this loop, find the highest peak. (current is highest and current +1 is smaller than current).
+If you found Highest peak and lowest dip, return the difference between these two values
+Else
+Return 0
+"""
 
 class Solution(object):
     def maxProfit(self, prices):

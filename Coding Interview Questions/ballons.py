@@ -20,6 +20,19 @@ Return 167
    coins =  3*1*5      +  3*5*8    +  1*3*8      + 1*8*1   = 167
 """
 """
+1. Scan the given list and prepare a list of elements and their position. 
+    Example (3,0) means element 3 at index 0
+2. Sort the list based on the key=element at index[0] in the list.
+3. Declare an output_coins variable which is used to store the result.
+4. Start a loop which iterated until there are no elements in the given list.
+    Pick the element from the sorted list which is minimum and is not at the edge.
+     (because 1*min-element*neighbor is smaller).
+    Index into the input list where you found this min element and 
+        compute output_coins=output_coins+ (previous element * current element *next element)
+        Delete the current item from the list.
+5. Return the output_coins value.
+"""
+"""
 1. Prepare a sliding window that contains 3 elements.
 2. For each of those sliding window, compute the product of those elements and store it in a output variable.
 3. Prepare a list without the middle element of the sliding window and the rest of the original list.

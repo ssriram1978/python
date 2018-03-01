@@ -13,27 +13,39 @@ maxProfit = 3
 transactions = [buy, sell, cooldown, buy, sell]
 """
 """
-Algo1:
+Algo1: (buy only only when stocks plunge (huge dip), sell as soon as you see a chance of making profit)
+--------------------------------------------------------------------------------------------------------
 1. Find and store the index which has an element lesser than the previous element. (buy)
 2. Starting from the index found at step1, find and store the index which has an element greater than previous index.(sell)
 3. Compute the difference between the elements found at the indexes.
 4. Skip the next index.
 5. Repeat step 1 to 4 until you reach the end of the loop.
-Algo2:
-1. Find and store the index which has an element lesser than the next element.(buy)
-2. Starting from the index found at step1, find and store the index which has an element greater than next index.(sell)
-3. Compute the difference between the elements found at the indexes.
-4. Skip the next index.
-5. Repeat step 1 to 4 until you reach the end of the loop.
-Algo3:
-1. Find and store the index which has an element lesser than the next element.(buy)
-2. Starting from the index+1 found at step1,store it as the index when you sell.(sell)
+
+Algo2: (buy only only when stocks plunge (huge dip), sell only when the stock price is going to dip the next day.)
+------------------------------------------------------------------------------------------------------------------
+1. Find and store the index which has an element lesser than the previous element. (buy)
+2. Starting from the index found at step1, find and store the index which has current element greater than next index.(sell)
 3. Compute the difference between the elements found at the indexes.
 4. Skip the next index.
 5. Repeat step 1 to 4 until you reach the end of the loop.
 
-Return the answer which results in maximum profit among these 3 algo.
+Algo3: (buy immediately and wait for max profit and then sell it.)
+------------------------------------------------------------------
+1. Find and store the index which has an element lesser than the next element.(buy)
+2. Starting from the index found at step1, find and store the index which has current element greater than next index.(sell)
+3. Compute the difference between the elements found at the indexes.
+4. Skip the next index.
+5. Repeat step 1 to 4 until you reach the end of the loop.
 
+Algo4: (buy immediately,sell as soon as you see a chance of making profit.)
+---------------------------------------------------------------------------
+1. Find and store the index which has an element lesser than the next element.(buy)
+2. Starting from the index found at step1, find and store the index which has current element greater than next index.(sell)
+3. Compute the difference between the elements found at the indexes.
+4. Skip the next index.
+5. Repeat step 1 to 4 until you reach the end of the loop.
+
+Return the answer which results in maximum profit among these 4 algo.
 """
 
 class Solution(object):

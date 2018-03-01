@@ -15,6 +15,9 @@ return its level order traversal as:
   [15,7]
 ]
 """
+"""
+Implement a BFS algorithm or pre-order traversal.
+"""
 # Definition for a binary tree node.
 # class TreeNode(object):
 #     def __init__(self, x):

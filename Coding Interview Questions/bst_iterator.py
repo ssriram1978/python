@@ -5,7 +5,11 @@ Calling next() will return the next smallest number in the BST.
 
 Note: next() and hasNext() should run in average O(1) time and uses O(h) memory, where h is the height of the tree.
 """
-
+"""
+You need to implement a minHeap datastructure which is actually a Binary tree.
+But in this case, minHeap has to be BST instead of a BT.
+The reason why we pick minHeap is because next() should return the min element at O(1).
+"""
 
 # Definition for a  binary tree node
 # class TreeNode(object):

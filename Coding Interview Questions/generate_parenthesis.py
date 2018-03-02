@@ -16,8 +16,14 @@ For example, given n = 3, a solution set is:
 This involves recursion.
 Pass a string variable to the recursive loop.
 Base case is if the string variable is of size n*2 print it or add it to a list and return.
-recurse by appending ( to the string variable and do it n times.
-recurse by appending ) to the string variable and do it n times.
+Else
+    If start index is less than n:
+        Append the opening parenthesis to the string.
+        Pass it recursively to self with start index incremented by 1.
+    Else:
+        If end index is less than n:
+        Append the End parenthesis to the string.
+        Pass it recursively to self with end index incremented by 1.
 """
 
 class Solution:

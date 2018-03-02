@@ -1,6 +1,11 @@
 import re
 
 """
+Given list=["abcdef","awfasfdef","asfafdefafagfagfeg","srgehytrjtktkdef"]
+Find the longest common prefix among all these strings in the list.
+"""
+
+"""
 Find the string having the minimum length. Let this length be L.
 Perform a binary search on any one string (from the input array of strings). 
 Let us take the first string and do a binary search on the characters from the index – 0 to L-1.

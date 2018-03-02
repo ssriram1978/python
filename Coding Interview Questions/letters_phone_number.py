@@ -12,9 +12,15 @@ Although the above answer is in lexicographical order, your answer could be in a
 from collections import defaultdict
 from collections import deque
 """
-Start from the end of the string and prepare a output list.
-Traverse the string backwards and pop the output list elements and append the the current string characters in a loop
-and push it back to the list.
+Invoke a function passing the digit string and index=0
+In that function:
+Base case: if index == len-1 then return just the number mapped character array.
+
+output=recurse(number,index+1)
+for every curent_char in current number mapped to current character array:
+    for every element in the next:
+        rewrite the element =current_char +element
+return the output
 """
 
 class Solution:

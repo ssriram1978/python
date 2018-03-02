@@ -52,7 +52,14 @@ class minheap:
         #swap the bottom element to the top of the node
         #find the smallest among the three (parent, leftchild, rightchild) and swap the element in such a way
         #that the smallest node stays on top and the largest node moves down
+
+        #pop the element on the top.
+        min_element=self.minheap_array[0]
+
+        #Copy the last item to the top and delete the last item.
         self.swap(len(self.minheap_array)-1,0)
+        self.minheap_array.pop()
+        
         minIndex=0
         while minIndex < len(self.minheap_array)-1:
             #find the smallest among the three (parent, leftchild, rightchild)
@@ -62,15 +69,19 @@ class minheap:
                 if self.hasRightChild(minIndex):
                     rightChild_val=self.getRightChildNode(minIndex)
                     if self.minheap_array[minofTwo] > rightChild_val:
-                        minofTwo=self.getRightChildNode(minIndex)
+                        minofTwo=self.getRightChildIndex(minIndex)
 
                 if self.minheap_array[minofTwo] < self.minheap_array[minIndex]:
+                    #you found the min index. Swap the content.
                     self.swap(minofTwo,minIndex)
                     minIndex=minofTwo
                 else:
+                    #minIndex already has the min element.
                     break
             else:
+                #there won't be a right child if there is no left child.
                 break
+        return min_element
 
     def delete(self,item):
         #delete an item from the heap
@@ -145,6 +156,8 @@ minheap_obj.print_minHeap()
 minheap_obj.add(1)
 minheap_obj.print_minHeap()
 
+output_sorted_array=[]
 for index in range(minheap_obj.getHeapSize()):
-    minheap_obj.heapifyDown()
-    minheap_obj.print_minHeap()
+    output_sorted_array.append(minheap_obj.heapifyDown())
+print("output sorted array="+str(output_sorted_array))
+

@@ -20,6 +20,7 @@ Find the length of the string.
 If the string is of length 1, return True
 
 If the length is even, then,
+    check if the mid two characters are the same.
     left index is set to the left mid character
     right index is set to the right mid character
 If odd,

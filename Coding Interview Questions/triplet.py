@@ -6,9 +6,19 @@ For example, if the given array is {12, 3, 4, 1, 6, 9} and given sum is 24,
 then there is a triplet (12, 3 and 9) present in array whose sum is 24.
 """
 """
-Algorithm:
-----------
+Algorithm-1:
+------------
 Sort the input array. o(n*logn) - Merge sort.
+Run a outer loop that iterates over all the elements.
+Run an inner loop that ierates over all the elements.
+Get the pair of elements i and j
+Perform a Binary search on the sorted list to see if target-(i+j) is there O(log n)
+If found, then return the value.
+
+O(n^2) + O(nlogn).
+
+Algorithm-2
+------------
 Define an output list=[]
 
 Define an output hash table that contains the triplets as the key.

@@ -14,17 +14,10 @@ Input: "LL"
 Output: false
 """
 """
-The move ‘G’ changes either x or y according to following rules.
-a) If current direction is North, then ‘G’ increments y and doesn’t change x.
-b) If current direction is East, then ‘G’ increments x and doesn’t change y.
-c) If current direction is South, then ‘G’ decrements y and doesn’t change x.
-d) If current direction is West, then ‘G’ decrements x and doesn’t change y.
-
-The moves ‘L’ and ‘R’, do not change x and y coordinates, they only change direction according to following rule.
-a) If current direction is North, then ‘L’ changes direction to West and ‘R’ changes to East
-b) If current direction is East, then ‘L’ changes direction to North and ‘R’ changes to South
-c) If current direction is South, then ‘L’ changes direction to East and ‘R’ changes to West
-d) If current direction is West, then ‘L’ changes direction to South and ‘R’ changes to North.
+U (up) moves x co-ordinate by +1 and and D (Down) moves x co-ordinate by -1.
+L (Left) moves y co-ordinate by +1 and R (Right) moves y co-ordinate by -1.
+Read the string from left to right and increment  x and y co-ordinates accordingly.
+Return True if x and y co-ordinates are 0 else return false.
 """
 
 class Solution:

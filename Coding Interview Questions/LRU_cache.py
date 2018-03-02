@@ -46,9 +46,22 @@ cache.get(4);       // returns 4
 
 """
 Least recent used cache.
-Whenever an element gets accessed from cache, bring that element to the top of the stack.
-When a new element needs to be added to the cache, replace the bottom most element from the stack with the new element.
-
+Define a stack where elements gets appended to the top of the stack.
+get() does the following:
+    Search for the element in the stack. o(n)
+        Can do o(1) by using a hash table.
+        Once you locate the element, 
+            Delete the element from the stack.
+            Append the element to the top of the stack.
+        Else
+            Return -1
+put() does the following:
+    If the stack is full:
+        Delete the element at index 0 in the stack.
+        Append the element to the top of the stack.
+    Else:
+        Append the element to the top of the stack.
+        Increment the size of the stack by 1.
 """
 
 from collections import defaultdict

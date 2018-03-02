@@ -23,26 +23,46 @@ Memoization is a technique where the result of a recursive called algorithm is c
 Problem solving strategy for a coding interview:
 ------------------------------------------------
 1.	Listen: Pay very close attention to any information in the problem description. You probably need it all for an optimal algorithm. 
+
 2.	Example: Most examples are too small or are special cases. Debug your example. Is there any way it’s a special case? Is it big enough? An example can dramatically improve your ability to solve an interview question and yet, so many candidates just try to solve the question in their heads.  When you hear a question, get out of your chair, go to the whiteboard, and draw an example.
+
 3.	Brute Force: Get a brute-force solution as soon as possible. Don’t worry about developing an efficient algorithm yet. State a native algorithm and its run time, then optimize from there. Don’t code yet though! 
+
 4.	Optimize: Walk through your Brute Force with BUD Optimization: Bottlenecks, Unnecessary work, Duplicated work.
-	a.	Look for any unused info. You usually need all the information in a problem. How can you leverage that information?
-	b.	Solve it manually on an example, then reverse engineer your thought process. How did you solve it? Use a fresh example. Sometimes, seeing a different example will unclog your mind or help you see a pattern in the problem. 
-	c.	Solve it “incorrectly” and think about why the algorithm fails. Can you fix those issues?
-	d.	Make a time vs space tradeoff. Hash tables are really useful! Storing extra state about the problem can help you optimize the runtime.
-	e.	Precompute information. Is there a way you can reorganize the data (sorting, etc.) or compute some values upfront that will help save time in the long run?
-	f.	Think about best conceivable run time.   
+
+	a. Look for any unused info. You usually need all the information in a problem. How can you leverage that information?
+	
+	b. Solve it manually on an example, then reverse engineer your thought process. How did you solve it? Use a fresh example. Sometimes, seeing a different example will unclog your mind or help you see a pattern in the problem. 
+	
+	c. Solve it “incorrectly” and think about why the algorithm fails. Can you fix those issues?
+	
+	d. Make a time vs space tradeoff. Hash tables are really useful! Storing extra state about the problem can help you optimize the runtime.
+	
+	e. Precompute information. Is there a way you can reorganize the data (sorting, etc.) or compute some values upfront that will help save time in the long run?
+	
+	f. Think about best conceivable run time.   
 5.	Walkthrough: Now that you have an optimal solution, walk through your Brute Force approach with these ideas in mind and look for BUD in detail. Make sure that you understand each detail before you start coding. Take a moment to solidify your understanding of the algorithm. You can write pseudocode if you like but walk through the algorithm and get a feel for the structure of the code. Know what the variables are and when they change. . If you don’t understand exactly what you’re about to write, you’ll struggle to code it. It will take you longer to finish the code and you’re more likely to make major errors.
+
 6.	Implement: Your goal is to write beautiful code. Modularize the code from the beginning and refactor to clean up anything that isn’t beautiful. White boarding coding is slow – very slow. So is testing your code and fixing it. As a result, you need to make sure that you get it as close to “perfect” in the beginning as possible. Start coding in the far top left corner of the whiteboard (you’ll need the space). Avoid “line creep”. Remember that you only have a short amount of code to demonstrate that you are a great developer. Everything counts. Write beautiful code. For modularization example, don’t waste your time to write in writing initialization code, just pretend that you already have it. Add a “todo” to come back and do a test. 
+
 7.	Test: Test in this order:
+
 8.	Conceptual test. Walk through your code like you would for a detailed code review. 
-	a.	A conceptual test means just reading and analyzing what each line of code does.  Think about it like you are explaining the lines of code for a code reviewer. 
-	b.	Unusual or non-standard code.
-	c.	Hot-spots, like arithmetic and null nodes. Base case in recursive code, integer division, start and end of iteration through a linked list.
-	d.	Small test cases. It’s much faster than a big test case and just as effective.
-	e.	Special cases and edge cases.
-	f.	When you find bugs, fix them carefully!
+
+	a. A conceptual test means just reading and analyzing what each line of code does.  Think about it like you are explaining the lines of code for a code reviewer. 
+	
+	b. Unusual or non-standard code.
+	
+	c. Hot-spots, like arithmetic and null nodes. Base case in recursive code, integer division, start and end of iteration through a linked list.
+	
+	d. Small test cases. It’s much faster than a big test case and just as effective.
+	
+	e. Special cases and edge cases.
+	
+	f. When you find bugs, fix them carefully!
+
 9.	Keep Talking! Your interviewer wants to hear how you approach the problem.
+
 10.	Interviews are supposed to be difficult. You do want to listen to the problem and make sure that you heard it correctly. Make sure that you mentally recorded any unique information in the problem. Ask yourself if you had used all the information in the problem. Write all the useful information on the whiteboard.
 
 Hash Table:

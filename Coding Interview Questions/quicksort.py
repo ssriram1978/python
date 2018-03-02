@@ -36,7 +36,8 @@ def partition(unsorted_list,start,end,pivot):
 def quicksort_recurse(unsorted_list,start,end):
     if start >= end:
         return
-    pivot=unsorted_list[(start+end)//2]
+    mid=start+(end-start)//2
+    pivot=unsorted_list[mid]
     index=partition(unsorted_list,start,end,pivot)
     quicksort_recurse(unsorted_list,start,index-1)
     quicksort_recurse(unsorted_list,index,end)

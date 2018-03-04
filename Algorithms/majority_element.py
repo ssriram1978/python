@@ -25,11 +25,14 @@ class Solution:
         for n in array:
             if n == majority:
                 count+=1
-        return count
+        if count > len(array)//2:
+            return count
+        else:
+            return -1
     def findMajorityElement(self,array):
         candidate=self.getCandidate(array)
         return self.validate(array,candidate)
 
 sol=Solution()
-array=[1,2,5,9,10,5,9,5,5,5]
+array=[1,2,5,1]
 print(sol.findMajorityElement(array))

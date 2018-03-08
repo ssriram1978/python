@@ -5,15 +5,6 @@ class StateEventTransitioner:
     def __init__(self):
         print("State Event Transitioner")
         self.table=defaultdict(object)
-
-    def setStates(self,states):
-        assert(states != type(list))
-        self.states=states
-
-    def setEvents(self,events):
-        assert (events != type(list))
-        self.events=events
-
     """
     keys= 1.Current state.
           2.Current event.

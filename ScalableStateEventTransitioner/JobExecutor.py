@@ -1,6 +1,6 @@
 class JobExecutor:
-    def __init__(self):
+    def __init__(self,jobs):
         print("Job Executor")
-        for count in range(10):
-            next_state = state_event_transition.execute(job)
-            job.set_next_state(next_state)
+        for job in jobs:
+            job.job_work(jobs)
+

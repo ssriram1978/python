@@ -9,15 +9,10 @@ class Client_param:
         self.socket_fd=0
 
 class Client:
-    def __init__(self,state_event_transition):
+    def __init__(self):
         print("client is getting created.")
         self.events = ["timeout", "error", "success response", "failure response"]
         self.states = ["initialize", "bind", "connect", "request", "read", "close"]
-        hash_table = {}
-        for state in self.states:
-            for event in self.events:
-                hash_table[state+event]=self.execute()
-        state_event_transition.setTransitionTable(hash_table)
 
 
     def execute(self,job_info):
@@ -39,6 +34,7 @@ class Client:
             client_param=Client_param(count,count,count,count,count)
             job.set_job_param(client_param)
             Jobs.append(job)
+            job.set_job_work(self)
         return Jobs
 
 

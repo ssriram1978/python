@@ -1,6 +1,5 @@
 from Job import Job
 from client import Client
-from StateEventTransitioner import StateEventTransitioner
 from JobScheduler import JobScheduler
 from JobMonitor import JobMonitor
 
@@ -10,7 +9,7 @@ if __name__ == "__main__":
 
     #initialize state event transitioner.
     #initialize client.
-    client=Client(StateEventTransitioner())
+    client=Client()
 
     #initialize job scheduler with client jobs.
     number_of_executors=1

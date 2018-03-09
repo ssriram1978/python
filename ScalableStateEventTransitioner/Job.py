@@ -19,3 +19,7 @@ class Job:
         self.job_param=job_param
     def set_job_work(self,work):
         self.job_work=work
+    def get_job_work(self):
+        return self.job_work
+    def get_job_id(self):
+        return self.job_id

@@ -1,6 +1,7 @@
 import threading
 from Job import Job
 import logging
+from JobScheduler import JobScheduler
 
 class Client_param:
     def __init__(self,local_port,remote_port,local_ip,remote_ip,socket_fd):
@@ -26,12 +27,15 @@ class Client:
             index=-1
         #move to next state
         job_info.set_current_state(self.states[index+1])
-
+        #notify job scheduler and return the job back to the job scheduler.
+        obj=JobScheduler()
+        obj.notify_job_done(job_info)
     def getJobs(self):
         Jobs=[]
         for count in range(100):
             jobid="Job"+str(count)
             job = Job(jobid)
+            job.set_job_index(count)
             job.set_current_state(self.states[0])
             job.set_current_event(self.events[0])
             client_param=Client_param(count,count,count,count,count)
@@ -41,7 +45,7 @@ class Client:
         return Jobs
 
 logging.basicConfig(
-level=logging.DEBUG,
+level=logging.INFO,
 format='[%(levelname)s] %(asctime)s (%(threadName)-10s) %(message)s',
 )
 

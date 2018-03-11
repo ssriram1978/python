@@ -5,6 +5,8 @@ class Job:
         self.current_event=-1
         self.job_param=None
         self.job_work=None
+        self.job_index=0
+
     def set_current_state(self,current_state):
         self.current_state=current_state
     def set_current_event(self,current_event):
@@ -23,3 +25,9 @@ class Job:
         return self.job_work
     def get_job_id(self):
         return self.job_id
+    def get_job_index(self):
+        return self.job_index
+    def set_job_index(self,job_index):
+        self.job_index=job_index
+    def get_init_state(self):
+        return "initialize"

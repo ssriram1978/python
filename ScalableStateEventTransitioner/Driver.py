@@ -14,7 +14,10 @@ if __name__ == "__main__":
 
     # initialize job scheduler with client jobs.
     number_of_executors = 5
-    jobScheduler = JobScheduler(client.getJobs(), number_of_executors)
+    jobScheduler = JobScheduler()
+    jobScheduler.set_jobs(client.getJobs())
+    jobScheduler.set_executors(number_of_executors)
+    jobScheduler.perform_job_scheduling()
 
     # initialize job monitor
     jobMonitor = JobMonitor()

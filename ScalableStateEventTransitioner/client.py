@@ -12,6 +12,7 @@ class Client_param:
         self.socket_fd=0
 
 class Client:
+    total_number_of_jobs=100000
     def __init__(self):
         print("client is getting created.")
         self.events = ["timeout", "error", "success response", "failure response"]
@@ -32,7 +33,7 @@ class Client:
         obj.notify_job_done(job_info)
     def getJobs(self):
         Jobs=[]
-        for count in range(100):
+        for count in range(Client.total_number_of_jobs):
             jobid="Job"+str(count)
             job = Job(jobid)
             job.set_job_index(count)

@@ -54,11 +54,12 @@ class JobMonitor:
 
         def monitor(self):
             while True:
-                character = input("Enter your choice: q-quit").strip()
+                character = input("Enter your choice: q-quit, r-display rate:").strip()
                 if character == 'q':
                     JobMonitor.stop=True
                     break
                 elif character == 'r':
-                    print("Total Rate=%d" % (self.current_job_done_rate))
+                    print("Total number of Jobs completed=%d,Current Rate=%d"
+                          % (self.current_job_count,self.current_job_done_rate))
                     for name,value in self.thread_job_completion_rate.items():
                         print("Name of the thread=%s,Rate=%d"%(name,value))

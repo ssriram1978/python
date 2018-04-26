@@ -14,9 +14,9 @@ You may assume k is always valid, 1 ≤ k ≤ array's length.
 """
 
 class Solution(object):
-    def findKthLargest(self, nums, k):
+    def findKthLargest(self, unsorted_list, k):
         """
-        :type nums: List[int]
+        :type unsorted_list: List[int]
         :type k: int
         :rtype: int
         """

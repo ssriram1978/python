@@ -25,6 +25,8 @@ class python_default_datastructures():
         print(list2)
         list3=sorted(self.dict1.values())
         print(list3)
+        value_sorted_dict = sorted(self.dict1.items(),key=lambda v: (v[1],v[0]))
+        print(value_sorted_dict)
 
     def perform_stack_operations(self):
         print(self.list1)
@@ -60,13 +62,22 @@ class python_default_datastructures():
         string_var2=''.join(list_of_char)
         print(string_var2)
 
+    def perform_lstrip_operation(self):
+        number=-1234
+        number_binary=str(bin(number))
+        print(number_binary)
+        number_binary=number_binary.lstrip('-0b')
+        print(number_binary)
+        print(number.bit_length())
+
 obj=python_default_datastructures(10,20)
-#obj.perform_default_dict_operations()
+obj.perform_default_dict_operations()
 #obj.perform_stack_operations()
 #obj.perform_queue_operations()
 #obj.perform_queue_operations()
 #obj.perform_tuple_operations()
-obj.perform_string_operation()
+#obj.perform_string_operation()
+#obj.perform_lstrip_operation()
 
 class first_unittest(unittest.TestCase):
     """Testing my class python_default_datastructures."""

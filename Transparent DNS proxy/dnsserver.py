@@ -10,8 +10,8 @@ from scapy.all import *
 import io
 import logging
 
-whitelist_blacklist_file_name="/home/istguser1/whitelist_blacklist2.txt"
-dns_query_names="/home/istguser1/dnsq.txt"
+whitelist_blacklist_file_name="whitelist_blacklist.txt"
+dns_query_names="dnsq.txt"
 
 PORT=53
 BUFSIZE = 1024
@@ -20,7 +20,7 @@ IP_FREEBIND=15
 IP_BINDANY=24
 MAC_OF_BBI_NEXT_HOP="e4:d3:f1:fc:75:00"
 MAC_OF_DNS_CONT="60:00:00:00:00:00"
-
+IFNAME='eth0'
 
 
 
@@ -28,9 +28,9 @@ def sniff_packet(pkt):
     #logging.debug("Rcvd pkt:")
     #logging.debug(hexdump(pkt))
 
-    if (pkt[Ether].dst != MAC_OF_DNS_CONT):
+    #if (pkt[Ether].dst != MAC_OF_DNS_CONT):
         #logging.debug("Discarding this packet because dest mac does not match this host.")
-        return
+     #  return
 
     if IP in pkt:
         ip_src = pkt[IP].src
@@ -96,7 +96,7 @@ def sniff_packet(pkt):
                                           DNS_resp
 
                         #logging.debug(hexdump(dns_response_packet))
-                        sendp(dns_response_packet,loop=False,realtime=True,iface='DNSCONT',verbose=False)
+                        sendp(dns_response_packet,loop=False,realtime=True,iface=IFNAME,verbose=False)
                         match_found=True
                         break
 
@@ -109,7 +109,7 @@ def sniff_packet(pkt):
 
                     logging.debug("Composing and forwarding DNS request for domain name =%s to the original dest.\n" %(qname))
                     #logging.debug(hexdump(dns_req))
-                    sendp(dns_req,loop=False,realtime=True,iface='DNSCONT',verbose=False)
+                    sendp(dns_req,loop=False,realtime=True,iface=IFNAME,verbose=False)
             else:
                 #leave the packet untouched.
                 #logging.debug("Received a packet with UDP sport=%s and UDP dport=%s.\n" %(str(udp_sport),str(udp_dport)))
@@ -136,7 +136,28 @@ logging.basicConfig(format='(%(threadName)-2s:'
                                 filename='dns_server_10_136_5_60.log',
                                 level=logging.DEBUG)
 
-sniff(iface='DNSCONT',filter='udp and port 53',prn=sniff_packet,store=False)
+
+def main(argv):
+    try:
+        debug = ''
+        opts, args = getopt.getopt(argv,"h:d:",["debug="])
+        for opt, arg in opts:
+            if opt == '-h':
+                print('dnsserver.py -d <debug>')
+                sys.exit()
+            elif opt in ("-d"):
+                debug = arg
+                print("debug %s" %(debug))
+
+    except getopt.GetoptError:
+        print('whitelist_blacklist.py -d <debug>')
+        sys.exit(2)
+
+
+if __name__ == "__main__":
+   main(sys.argv[1:])
+
+sniff(iface=IFNAME,filter='udp and port 53',prn=sniff_packet,store=False)
 #sniff(iface='DNSCONT',filter='udp',prn=sniff_packet,store=False)
 
 

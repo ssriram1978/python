@@ -27,7 +27,8 @@ R(n) = max (P[n] + R(n-2), R(n-1))
 Base case: R(0) = 0, R(1) = 1
 """
 
-def find_max_profit2(current_index, profit_array, revenue_cache):
+
+def find_max_profit_recurse(current_index, profit_array, revenue_cache):
     max_profit = 0
     if current_index == 0:
         max_profit = 1
@@ -36,19 +37,20 @@ def find_max_profit2(current_index, profit_array, revenue_cache):
     else:
         revenue_n_1 = 0
         if not revenue_cache[current_index-1]:
-            revenue_n_1 = find_max_profit2(current_index-1,
-                                           profit_array,
-                                           revenue_cache)
+            revenue_n_1 = find_max_profit_recurse(current_index - 1,
+                                                  profit_array,
+                                                  revenue_cache)
         revenue_n_2 = 0
         if not revenue_cache[current_index-2]:
-            revenue_n_2 = find_max_profit2(current_index-2,
-                                           profit_array,
-                                           revenue_cache)
+            revenue_n_2 = find_max_profit_recurse(current_index - 2,
+                                                  profit_array,
+                                                  revenue_cache)
         max_profit = max(profit_array[current_index] + revenue_n_2,
                           revenue_n_1)
     return max_profit
 
-def find_max_profit(nums):
+
+def find_max_profit_non_recurse(nums):
     if not nums:
         return 0
     if len(nums) == 1:
@@ -63,7 +65,8 @@ def find_max_profit(nums):
             dp[i] = max(dp[i-1], dp[i-2]+nums[i])
     return dp[-1]
 
+
 nums = [2,7,1,3,9]
-print(find_max_profit(nums))
+print(find_max_profit_non_recurse(nums))
 cache = [0] * len(nums)
-print(find_max_profit2(len(nums)-1, nums, cache))
+print(find_max_profit_recurse(len(nums) - 1, nums, cache))

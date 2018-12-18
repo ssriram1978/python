@@ -18,8 +18,22 @@ Output: 0
 Explanation: In this case, no transaction is done, i.e. max profit = 0.
 
 """
+"""
+Alg:
+----
+input =[,,,,,,]
+min = input[0]
+profit = 0
+if input[i] < min: #store the min if the next value is lesser.
+    min = input[i]
+else:  #compute the profit
+    current_profit = input[i]-min
+    if current_profit is greater than profit:
+        profit = current_profit 
+"""
 
-def max_profit(input):
+
+def max_profit_non_recurse(input):
     if len(input) == 0 or len(input) == 1:
         return 0
     min = input[0]
@@ -31,5 +45,6 @@ def max_profit(input):
             profit = input[index] - min
     return profit
 
-input=[7,1,5,3,6,4]
-print(max_profit(input))
+
+input=[7,1,5,4,6,4,0]
+print(max_profit_non_recurse(input))

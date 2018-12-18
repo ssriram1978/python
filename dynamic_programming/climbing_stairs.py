@@ -75,50 +75,25 @@ class Solution:
         else:
             return self.climbStairs_recursion(n - 1) + self.climbStairs_recursion(n - 2)
 
-    def slide_window_by_one(self, list_of_values, m):
-        value_to_be_appended = 0
-        for index in range(m - 1, -1, -1):
-            value_to_be_appended += list_of_values[index]
-        list_of_values.append(value_to_be_appended)
-        del (list_of_values[0])
-
-    def prepare_last_m_elements(self, last_m_elements, m, n):
-        if n <=m:
-            if m == 0:
-                last_m_elements.append(1)
-            elif m == 1:
-                last_m_elements.append(1)
-                last_m_elements.append(1)
-            elif m == 2:
-                last_m_elements.append(1)
-                last_m_elements.append(1)
-                last_m_elements.append(2)
-            else:
-                total_sum = 0
-                for index in range(m - 1, -1, -1):
-                    total_sum += last_m_elements[index]
-                last_m_elements.append(total_sum)
-                del (last_m_elements[0])
-        else:
-            pass
-
     def non_recurse(self, n, m):
-        total_ways = 0
+        dp = [0] * (n+1)
         if n == 0:
-            total_ways = 0
+            return 0
         elif n == 1:
-            total_ways = 1
+            return 1
         elif n == 2:
-            total_ways = 2
+            if m == 1:
+                return 1
+            else:
+                return 2
         else:
-            last_m_elements = []
-            self.prepare_last_m_elements(last_m_elements, m-1, n)
-            for index in range(m, n):
-                self.slide_window_by_one(last_m_elements, m)
-            for index in range(m - 1, -1, -1):
-                total_ways += last_m_elements[index]
-        return total_ways
-
+            dp[0] = 1
+            dp[1] = 1
+            for index in range(2,n+1):
+                for index2 in range(1,m+1):
+                    if index-index2>=0:
+                        dp[index] += dp[index-index2]
+            return dp[n]
 
 sol = Solution()
 total_stairs = 5

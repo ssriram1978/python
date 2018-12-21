@@ -8,6 +8,7 @@ import threading
 import subprocess
 import traceback
 
+
 def import_all_packages():
     realpath = os.path.realpath(__file__)
     dirname = os.path.dirname(realpath)
@@ -15,6 +16,7 @@ def import_all_packages():
     for index in range(len(dirname_list)):
         module_path = '/'.join(dirname_list[:index])
         try:
+            print(module_path)
             sys.path.append(module_path)
         except:
             pass
@@ -22,7 +24,7 @@ def import_all_packages():
 
 import_all_packages()
 
-from http_traffic_monitor.http_webserver.http_web_server import HTTPWebServerDumpStats
+from http_webserver.http_web_server import HTTPWebServerDumpStats
 
 """
 This is a singleton class.
@@ -78,8 +80,8 @@ class HTTPLogAnalyzer:
 
     def __init__(self):
         self.__log_file_name = "/var/log/access.log"
-        self.__output_current_stats_file_name = "../current_stats.txt"
-        self.__output_alarms_events_file_name = "../historic_stats.txt"
+        self.__output_current_stats_file_name = "current_stats.txt"
+        self.__output_alarms_events_file_name = "historic_stats.txt"
         self.__stats_time_interval = 10
         self.__threshold = 10
         self.__event_timer_val = 120
@@ -106,10 +108,10 @@ class HTTPLogAnalyzer:
                                          default="/var/log/access.log")
 
         self.__output_current_stats_file_name = os.getenv("output_current_stats_file_name_key",
-                                                          default="../current_stats.txt")
+                                                          default="current_stats.txt")
 
         self.__output_alarms_events_file_name = os.getenv("output_alarms_events_file_name_key",
-                                                          default="../historic_stats.txt")
+                                                          default="historic_stats.txt")
 
         self.__stats_time_interval = int(os.getenv("stats_time_interval_key",
                                                    default="10"))
@@ -120,7 +122,7 @@ class HTTPLogAnalyzer:
                                      default="120"))
 
         self.__web_server_port = int(os.getenv("web_server_port_key",
-                                     default="8080"))
+                                     default="8085"))
 
     def cleanup(self):
         # Not used. Need to force kill the python3 process.

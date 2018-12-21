@@ -39,8 +39,16 @@ class HTTPLogAnalyzer:
         return HTTPLogAnalyzer.__instance.__hit_counts
 
     @staticmethod
+    def get_max_number_of_samples():
+        return HTTPLogAnalyzer.__instance.__max_number_of_samples
+
+    @staticmethod
     def get_stats_time_interval():
         return HTTPLogAnalyzer.__instance.__stats_time_interval
+
+    @staticmethod
+    def get_threshold_limit():
+        return HTTPLogAnalyzer.__instance.__threshold
 
     @staticmethod
     def get_output_alarms_events_file_name():
@@ -62,6 +70,9 @@ class HTTPLogAnalyzer:
         self.__hit_counts = deque()
 
         self.__read_environment_variables()
+        # Max number of samples is 120//10 = 12
+        self.__max_number_of_samples = self.__event_timer_val // self.__stats_time_interval
+
         # 1. Create a web server thread to display the output stats.
         self.__create_http_webserver_thread()
         # 2. Create a two minute event alarm generator thread.
@@ -94,7 +105,9 @@ class HTTPLogAnalyzer:
     def run_event_monitor(*args, **kwargs) -> object:
         print("Starting {}".format(threading.current_thread().getName()))
         t = threading.currentThread()
+
         is_alarm_raised = False
+        # 1. Read the Thread arguments.
         sleep_time = 0
         for name, value in kwargs.items():
             print("name={},value={}".format(name, value))
@@ -105,18 +118,18 @@ class HTTPLogAnalyzer:
             t = threading.currentThread()
             # compute the sum of all the 10 second hit counts.
             total_hit_counts = sum(HTTPLogAnalyzer.get_hit_counts())
-
-            # compute the total max threshold for 2 minutes.
-            # total_max_threshold = 10 (default threshold per 10 sec) +
-            # (120//10) where 120 is 120 seconds = 2 minutes / 10 (default time interval when stats are computed)
-            total_max_threshold = HTTPLogAnalyzer.__instance.__threshold * (
-                    sleep_time // HTTPLogAnalyzer.get_stats_time_interval())
-
+            average_of_total_hits = total_hit_counts // HTTPLogAnalyzer.get_max_number_of_samples()
+            print("Average of total_hits = {}"
+                  .format(average_of_total_hits))
             # raise an alarm event if the total_hit_counts exceed total_max_threshold.
-            if total_hit_counts >= total_max_threshold:
-                print("Raising an alarm as total hit count {} "
-                      "is greater than maximum threshold {}"
-                      .format(total_hit_counts, total_max_threshold))
+            if average_of_total_hits >= HTTPLogAnalyzer.get_threshold_limit():
+                # skip redundant alarm generation if there is already an existing alarm.
+                if is_alarm_raised:
+                    continue
+                print("Raising an alarm as average of hit counts {} "
+                      "is greater than average threshold {}"
+                      .format(average_of_total_hits,
+                              HTTPLogAnalyzer.get_threshold_limit()))
 
                 localtime = time.asctime(time.localtime(time.time()))
 
@@ -127,19 +140,20 @@ class HTTPLogAnalyzer:
             elif is_alarm_raised:
                 is_alarm_raised = False
                 print(
-                    "Clearing the alarm as total hit count {} is "
-                    "less than maximum threshold {}"
-                    .format(total_hit_counts, total_max_threshold))
+                    "Clearing the alarm as average hit count {} is "
+                    "less than the threshold {}"
+                    .format(average_of_total_hits,
+                            HTTPLogAnalyzer.get_threshold_limit()))
 
                 localtime = time.asctime(time.localtime(time.time()))
 
                 HTTPLogAnalyzer.__instance.write_historic_stats_to_output(
                     "Clearing the alert at {} "
-                    "as total hit count {} is "
-                    "less than maximum threshold {}"
+                    "as average hit count {} is "
+                    "less than the threshold {}"
                     .format(localtime,
-                            total_hit_counts,
-                            total_max_threshold))
+                            average_of_total_hits,
+                            HTTPLogAnalyzer.get_threshold_limit()))
 
         print("Exiting {}".format(threading.current_thread().getName()))
 
@@ -172,13 +186,12 @@ class HTTPLogAnalyzer:
     def __compute_aggregate_hit_count(self):
         # 1. Compute the sum of all the 120/10 = 12 samples.
         cumulative_sum_of_hits = sum(self.__section_to_hit_dict.values())
-        max_number_of_samples_in_two_min = self.__event_timer_val // self.__stats_time_interval
         # 2. Add it to the tail of the hit count list.
         self.__hit_counts.append(cumulative_sum_of_hits)
         # 3. Slide the window to the left by one if it is full. (12 values)
-        if len(self.__hit_counts) >= max_number_of_samples_in_two_min:
+        if len(self.__hit_counts) > self.__max_number_of_samples:
             self.__hit_counts.popleft()
-        print(self.__hit_counts)
+        #print(self.__hit_counts)
 
     def __locate_pattern_in_log_entry(self,
                                       log_entry,
@@ -197,7 +210,7 @@ class HTTPLogAnalyzer:
         return index_of_search_input
 
     def __consume_and_process_log_entry(self, log_entry):
-        print("Read {}.".format(log_entry))
+        # print("Read {}.".format(log_entry))
         is_successful = False
         """
         parse the log_entry.
@@ -296,8 +309,8 @@ class HTTPLogAnalyzer:
             # 4. For each new log entry read from the input file, consume it.
             for log_entry in self.__read_data_from_file():
                 self.__consume_and_process_log_entry(log_entry)
-            # 5. Compute the aggregate hit counts of all the Resources found.
-            self.__compute_aggregate_hit_count()
+        # 5. Compute the aggregate hit counts of all the Resources found.
+        self.__compute_aggregate_hit_count()
         # 6. Over write the output file with the latest stats.
         self.__write_the_current_stats_to_output()
         # 7. Clean up the dict of resources to hits.

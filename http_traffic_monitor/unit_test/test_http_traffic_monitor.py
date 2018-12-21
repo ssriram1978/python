@@ -144,16 +144,16 @@ class TestHTTPTrafficMonitor(unittest.TestCase):
 
     def test_run(self):
         print("Starting unit testing of HTTP Traffic monitor.")
-        self.create_w3c_log_producer_thread(5, 1)
+        self.create_w3c_log_producer_thread(10, 10)
         self.create_w3c_analyzer_thread()
-        time.sleep(20)
+        time.sleep(1)
         for index in range(12):
             self.assertTrue(self.validate_current_stats())
             time.sleep(10)
-        time.sleep(10)
         self.assertTrue(self.validate_historic_stats(raise_alarm=True))
         self.w3c_log_producer_thread.do_run = False
         self.w3c_log_producer_thread.join(1.0)
+        time.sleep(10)
         if self.w3c_log_producer_thread.is_alive():
             print("Unable to join w3c_log_producer_thread.")
             raise BaseException
@@ -163,7 +163,7 @@ class TestHTTPTrafficMonitor(unittest.TestCase):
     def tearDown(self):
         self.w3c_analyzer_thread.do_run = False
         self.w3c_analyzer_thread.join(1.0)
-
+        time.sleep(5)
         if self.w3c_analyzer_thread.is_alive():
             print("Unable to join w3c_analyzer_thread.")
             raise BaseException

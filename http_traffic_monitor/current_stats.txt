@@ -1,0 +1,4 @@
+10 second aggregate of resource_section to Hit count.
+****************************************************.
+Resource_section                         ==> Hits      .
+********************************************************.

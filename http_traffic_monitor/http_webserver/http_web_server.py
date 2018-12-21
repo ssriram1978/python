@@ -20,13 +20,13 @@ class RequestCallBackHandler(BaseHTTPRequestHandler):
         with open("../historic_stats.txt") as f:
             for line in f:
                 self.wfile.write(b"<p>%s</p>" % line.encode('utf8'))
-            self.wfile.write(b"<body><p>*******************.</p>")
+            self.wfile.write(b"<body><p>--------------------.</p>")
         self.wfile.write(b"<body><p> Current Running Stats.</p>")
         self.wfile.write(b"<body><p>*******************.</p>")
         with open("../current_stats.txt") as f:
             for line in f:
                 self.wfile.write(b"<p>%s</p>" % line.encode('utf8'))
-            self.wfile.write(b"<body><p>*******************.</p>")
+            self.wfile.write(b"<body><p>--------------------.</p>")
         self.wfile.write(b"</body></html>")
         return
 

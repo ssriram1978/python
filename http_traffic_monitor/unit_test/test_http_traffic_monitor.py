@@ -1,9 +1,7 @@
 import os
 import time
 import sys
-import traceback
 import unittest
-import subprocess
 import threading
 
 
@@ -20,6 +18,8 @@ def import_all_packages():
 
 
 import_all_packages()
+
+from http_traffic_monitor.http_log_analyzer.http_log_analyzer import HTTPLogAnalyzer
 
 w3c_logs = [
     "127.0.0.1 - james [09/May/2018:16:00:39 +0000] \"GET /report HTTP/1.0\" 200 123",
@@ -48,13 +48,20 @@ class TestHTTPTrafficMonitor(unittest.TestCase):
 
     def setUp(self):
         os.environ["broker_name_key"] = "localhost:9092"
+        self.w3c_log_producer_thread = None
+        self.w3c_analyzer_thread = None
 
     @staticmethod
     def analyze_w3c_logs():
         print("Starting {}".format(threading.current_thread().getName()))
-        t = threading.currentThread()
-        while getattr(t, "do_run", True):
+        try:
             t = threading.currentThread()
+            web_server = HTTPLogAnalyzer()
+            while getattr(t, "do_run", True):
+                t = threading.currentThread()
+                web_server.analyze_w3c_http_logs()
+        except KeyboardInterrupt:
+            print('^C received, shutting down.')
         print("Thread {}: Exiting"
               .format(threading.current_thread().getName()))
 
@@ -79,13 +86,14 @@ class TestHTTPTrafficMonitor(unittest.TestCase):
             127.0.0.1 - james [09/May/2018:16:00:39 +0000] "GET /report HTTP/1.0" 200 123
             """
             for index in range(number_of_messages_per_second):
-                with open(TestHTTPTrafficMonitor.w3c_file_name) as f:
-                    f.write(w3c_logs[current_index])
+                f = open(TestHTTPTrafficMonitor.w3c_file_name, 'a')
+                f.write(w3c_logs[current_index]+'\n')
                 if current_index == len(w3c_logs) - 1:
                     current_index = 0
                 else:
                     current_index += 1
-                time.sleep(sleep_time)
+                f.close()
+            time.sleep(sleep_time)
         print("Thread {}: Exiting"
               .format(threading.current_thread().getName()))
 
@@ -103,6 +111,16 @@ class TestHTTPTrafficMonitor(unittest.TestCase):
         self.w3c_log_producer_thread.do_run = True
         self.w3c_log_producer_thread.name = "w3c_log_producer_thread"
         self.w3c_log_producer_thread.start()
+
+    def create_w3c_analyzer_thread(self):
+        self.w3c_analyzer_thread = None
+        self.w3c_analyzer_thread = threading.Thread(name="w3c_analyzer_thread",
+                                                    target=TestHTTPTrafficMonitor.analyze_w3c_logs,
+                                                    )
+        self.w3c_analyzer_thread.do_run = True
+        self.w3c_analyzer_thread.name = "w3c_analyzer_thread"
+        self.w3c_analyzer_thread.start()
+
 
     def validate_historic_stats(self, raise_alarm=False):
         with open("../historic_stats.txt") as f:
@@ -127,6 +145,8 @@ class TestHTTPTrafficMonitor(unittest.TestCase):
     def test_run(self):
         print("Starting unit testing of HTTP Traffic monitor.")
         self.create_w3c_log_producer_thread(5, 1)
+        self.create_w3c_analyzer_thread()
+        time.sleep(20)
         for index in range(12):
             self.assertTrue(self.validate_current_stats())
             time.sleep(10)
@@ -137,8 +157,13 @@ class TestHTTPTrafficMonitor(unittest.TestCase):
         if self.w3c_log_producer_thread.is_alive():
             print("Unable to join w3c_log_producer_thread.")
             raise BaseException
-        time.sleep(120)
+        time.sleep(130)
         self.assertTrue(self.validate_historic_stats(raise_alarm=False))
 
     def tearDown(self):
-        pass
+        self.w3c_analyzer_thread.do_run = False
+        self.w3c_analyzer_thread.join(1.0)
+
+        if self.w3c_analyzer_thread.is_alive():
+            print("Unable to join w3c_analyzer_thread.")
+            raise BaseException

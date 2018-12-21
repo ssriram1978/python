@@ -25,7 +25,6 @@ from http_traffic_monitor.http_webserver.http_web_server import HTTPWebServerDum
 
 
 class HTTPLogAnalyzer:
-    TWO_MINUTE_INTERVAL = 120
     HTTP_VERBS = ['GET', 'PUT', 'POST', 'PATCH', 'DELETE']
     # Singleton. Used in fetching the two_minute_hit_counts from a thread.
     __instance = None
@@ -36,8 +35,8 @@ class HTTPLogAnalyzer:
         return HTTPLogAnalyzer.__instance
 
     @staticmethod
-    def get_two_minute_hit_counts():
-        return HTTPLogAnalyzer.__instance.__two_minute_hit_counts
+    def get_hit_counts():
+        return HTTPLogAnalyzer.__instance.__hit_counts
 
     @staticmethod
     def get_stats_time_interval():
@@ -53,19 +52,20 @@ class HTTPLogAnalyzer:
         self.__output_alarms_events_file_name = "../historic_stats.txt"
         self.__stats_time_interval = 10
         self.__threshold = 10
+        self.__event_timer_val = 120
         self.__http_output_webserver_thread = None
-        self.__two_minute_event_monitor_thread = None
+        self.__event_monitor_thread = None
         self.__cached_stamp = 0
         self.__log_file_size = 0
         self.__last_read_file_position = 0
         self.__section_to_hit_dict = defaultdict(int)
-        self.__two_minute_hit_counts = deque()
+        self.__hit_counts = deque()
 
         self.__read_environment_variables()
         # 1. Create a web server thread to display the output stats.
         self.__create_http_webserver_thread()
         # 2. Create a two minute event alarm generator thread.
-        self.__create_two_minute_event_monitor_thread()
+        self.__create_event_monitor_thread()
 
     def __read_environment_variables(self):
         pass
@@ -75,38 +75,42 @@ class HTTPLogAnalyzer:
         if self.__http_output_webserver_thread.is_alive():
             print("Unable to force stop a thread.")
             raise BaseException
-        self.__two_minute_event_monitor_thread.join(1.0)
-        if self.__two_minute_event_monitor_thread.is_alive():
+        self.__event_monitor_thread.join(1.0)
+        if self.__event_monitor_thread.is_alive():
             print("Unable to force stop a thread.")
             raise BaseException
 
     @staticmethod
     def write_historic_stats_to_output(event):
         # 1. Open the output file in write mode to overwrite all the content.
-        f = open(HTTPLogAnalyzer.get_output_alarms_events_file_name(), 'w+')
+        f = open(HTTPLogAnalyzer.get_output_alarms_events_file_name(), 'a')
         # 2. Prepare a heading that says current resource section to hits.
-        f.write("Historic events and alarms of resource_section to Hit count.\n")
-        f.write("***********************************************************.\n")
+        # f.write("Historic events and alarms of resource_section to Hit count.\n")
+        # f.write("***********************************************************.\n")
         f.write(event + '\n')
         f.close()
 
     @staticmethod
-    def run_two_minute_event_monitor() -> object:
+    def run_event_monitor(*args, **kwargs) -> object:
         print("Starting {}".format(threading.current_thread().getName()))
         t = threading.currentThread()
         is_alarm_raised = False
+        sleep_time = 0
+        for name, value in kwargs.items():
+            print("name={},value={}".format(name, value))
+            if name == 'sleep_time':
+                sleep_time = value
         while getattr(t, "do_run", True):
+            time.sleep(sleep_time)
             t = threading.currentThread()
-            if is_alarm_raised:
-                continue
             # compute the sum of all the 10 second hit counts.
-            total_hit_counts = sum(HTTPLogAnalyzer.get_two_minute_hit_counts())
+            total_hit_counts = sum(HTTPLogAnalyzer.get_hit_counts())
 
             # compute the total max threshold for 2 minutes.
             # total_max_threshold = 10 (default threshold per 10 sec) +
             # (120//10) where 120 is 120 seconds = 2 minutes / 10 (default time interval when stats are computed)
             total_max_threshold = HTTPLogAnalyzer.__instance.__threshold * (
-                    HTTPLogAnalyzer.TWO_MINUTE_INTERVAL // HTTPLogAnalyzer.get_stats_time_interval())
+                    sleep_time // HTTPLogAnalyzer.get_stats_time_interval())
 
             # raise an alarm event if the total_hit_counts exceed total_max_threshold.
             if total_hit_counts >= total_max_threshold:
@@ -139,12 +143,14 @@ class HTTPLogAnalyzer:
 
         print("Exiting {}".format(threading.current_thread().getName()))
 
-    def __create_two_minute_event_monitor_thread(self):
-        self.__two_minute_event_monitor_thread = threading.Thread(name="two_minute_event_monitor_thread",
-                                                                  target=HTTPLogAnalyzer.run_two_minute_event_monitor)
-        self.__two_minute_event_monitor_thread.do_run = True
-        self.__two_minute_event_monitor_thread.name = "http_output_webserver_thread"
-        self.__two_minute_event_monitor_thread.start()
+    def __create_event_monitor_thread(self):
+        self.__event_monitor_thread = threading.Thread(name="two_minute_event_monitor_thread",
+                                                       target=HTTPLogAnalyzer.run_event_monitor,
+                                                       args=(),
+                                                       kwargs={'sleep_time': self.__event_timer_val})
+        self.__event_monitor_thread.do_run = True
+        self.__event_monitor_thread.name = "http_output_webserver_thread"
+        self.__event_monitor_thread.start()
 
     @staticmethod
     def run_webserver() -> object:
@@ -166,12 +172,13 @@ class HTTPLogAnalyzer:
     def __compute_aggregate_hit_count(self):
         # 1. Compute the sum of all the 120/10 = 12 samples.
         cumulative_sum_of_hits = sum(self.__section_to_hit_dict.values())
-        max_number_of_samples_in_two_min = HTTPLogAnalyzer.TWO_MINUTE_INTERVAL // self.__stats_time_interval
+        max_number_of_samples_in_two_min = self.__event_timer_val // self.__stats_time_interval
         # 2. Add it to the tail of the hit count list.
-        self.__two_minute_hit_counts.append(cumulative_sum_of_hits)
+        self.__hit_counts.append(cumulative_sum_of_hits)
         # 3. Slide the window to the left by one if it is full. (12 values)
-        if len(self.__two_minute_hit_counts) >= max_number_of_samples_in_two_min:
-            self.__two_minute_hit_counts.popleft()
+        if len(self.__hit_counts) >= max_number_of_samples_in_two_min:
+            self.__hit_counts.popleft()
+        print(self.__hit_counts)
 
     def __locate_pattern_in_log_entry(self,
                                       log_entry,

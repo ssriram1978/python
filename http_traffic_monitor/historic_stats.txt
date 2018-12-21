@@ -1,1 +1,2 @@
-afafafa
+High traffic generated an alert - hits = 550, triggered at Fri Dec 21 06:36:45 2018 
+High traffic generated an alert - hits = 545, triggered at Fri Dec 21 06:38:45 2018 

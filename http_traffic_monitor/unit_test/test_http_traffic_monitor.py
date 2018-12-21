@@ -3,7 +3,8 @@ import time
 import sys
 import unittest
 import threading
-
+import subprocess
+import traceback
 
 def import_all_packages():
     realpath = os.path.realpath(__file__)
@@ -47,7 +48,13 @@ class TestHTTPTrafficMonitor(unittest.TestCase):
     w3c_file_name = "/var/log/access.log"
 
     def setUp(self):
-        os.environ["broker_name_key"] = "localhost:9092"
+        os.environ["log_file_name_key"] = "/var/log/access.log"
+        os.environ["output_current_stats_file_name_key"] = "../current_stats.txt"
+        os.environ["output_alarms_events_file_name_key"] = "../historic_stats.txt"
+        os.environ["stats_time_interval_key"] = "10"
+        os.environ["threshold_key"] = "10"
+        os.environ["event_timer_val_key"] = "120"
+        os.environ["web_server_port_key"] = "8085"
         self.w3c_log_producer_thread = None
         self.w3c_analyzer_thread = None
 
@@ -57,6 +64,7 @@ class TestHTTPTrafficMonitor(unittest.TestCase):
         try:
             t = threading.currentThread()
             web_server = HTTPLogAnalyzer()
+            time.sleep(1)
             while getattr(t, "do_run", True):
                 t = threading.currentThread()
                 web_server.analyze_w3c_http_logs()
@@ -121,26 +129,45 @@ class TestHTTPTrafficMonitor(unittest.TestCase):
         self.w3c_analyzer_thread.name = "w3c_analyzer_thread"
         self.w3c_analyzer_thread.start()
 
-
     def validate_historic_stats(self, raise_alarm=False):
-        with open("../historic_stats.txt") as f:
-            data = f.read()
-            if raise_alarm:
-                if 'High traffic generated an alert' not in data:
-                    return False
-            else:
-                if 'Clearing the alert' not in data:
-                    return False
-        return True
+        try:
+            with open("../historic_stats.txt") as f:
+                data = f.read()
+                if raise_alarm:
+                    if 'High traffic generated an alert' not in data:
+                        return False
+                else:
+                    if 'Clearing the alert' not in data:
+                        return False
+            return True
+        except FileNotFoundError:
+            return True
+        except:
+            print("Exception in user code:")
+            print("Unhandled exception {}.".format(sys.exc_info()[0]))
+            print("-" * 60)
+            traceback.print_exc(file=sys.stdout)
+            print("-" * 60)
+            return False
 
     def validate_current_stats(self):
-        with open("../current_stats.txt") as f:
-            data = f.read()
-            if 'report HTTP' not in data:
-                return False
-            if 'api' not in data:
-                return False
-        return True
+        try:
+            with open("../current_stats.txt") as f:
+                data = f.read()
+                if 'report HTTP' not in data:
+                    return False
+                if 'api' not in data:
+                    return False
+            return True
+        except FileNotFoundError:
+            return True
+        except:
+            print("Exception in user code:")
+            print("Unhandled exception {}.".format(sys.exc_info()[0]))
+            print("-" * 60)
+            traceback.print_exc(file=sys.stdout)
+            print("-" * 60)
+            return False
 
     def test_run(self):
         print("Starting unit testing of HTTP Traffic monitor.")
@@ -157,13 +184,33 @@ class TestHTTPTrafficMonitor(unittest.TestCase):
         if self.w3c_log_producer_thread.is_alive():
             print("Unable to join w3c_log_producer_thread.")
             raise BaseException
-        time.sleep(130)
+        time.sleep(150)
         self.assertTrue(self.validate_historic_stats(raise_alarm=False))
 
     def tearDown(self):
-        self.w3c_analyzer_thread.do_run = False
-        self.w3c_analyzer_thread.join(1.0)
-        time.sleep(5)
-        if self.w3c_analyzer_thread.is_alive():
-            print("Unable to join w3c_analyzer_thread.")
-            raise BaseException
+        completedProcess = subprocess.run(["rm",
+                                           "-f",
+                                           "../current_stats.txt"],
+                                          stdout=subprocess.PIPE)
+        print(completedProcess.stdout)
+        completedProcess = subprocess.run(["rm",
+                                           "-f",
+                                           "../historic_stats.txt"],
+                                          stdout=subprocess.PIPE)
+        print(completedProcess.stdout)
+
+        completedProcess = subprocess.run(["killall",
+                                           "pidof",
+                                           "/usr/bin/python3.5"],
+                                          stdout=subprocess.PIPE)
+        print(completedProcess.stdout)
+
+
+if __name__ == "__main__":
+    try:
+        unittest.main()
+    except:
+        print("Exception in user code:")
+        print("-" * 60)
+        traceback.print_exc(file=sys.stdout)
+        print("-" * 60)

@@ -15,4 +15,4 @@ RUN apt-get install -y \
     tcpflow  \
     tcpdump
 COPY . .
-CMD python3 http_traffic_monitor.py
+CMD python3 http_log_analyzer/http_log_analyzer.py

@@ -20,7 +20,8 @@ def longest_common_substring_non_recurse2(X, Y, m, n,dp, output_string):
                     dp[index1][index2] = dp[index1-1][index2-1]+1
                 if dp[index1][index2] > result:
                     result = dp[index1][index2]
-                    output_string[0] = Y[index1:index1+result]
+                    #print("index1={},index2={}".format(index1,index2))
+                    output_string[0] = X[index1-result+1:index1+1]
             else:
                 dp[index1][index2]=0
     return result
@@ -69,8 +70,8 @@ def longest_common_substring_recurse(X, Y, m, n, dp, count):
 
 
 
-X="DEADBEEFXXR"
-Y="EATYYBEEF"
+X="DEADXXXXXXXXXXXXXXUUUUUUUUBEEFXXR"
+Y="EATYYCCCCCCCCCCCCCCCCCCCCCBEEFYYYYR"
 output_string = [""]
 x = 0
 if len(X) > len(Y):
@@ -99,4 +100,6 @@ print("Non Recurse2: longest common substring length={}".format(longest_common_s
                                                                            len(Y),
                                                                            dp,
                                                                            output_string)))
+#for x in dp:
+#    print("{}".format(x))
 print("output_string = {}".format(output_string))

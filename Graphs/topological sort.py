@@ -65,8 +65,8 @@ class Graph:
             if visited[i] == False:
                 self.topologicalSortUtil(i, visited, stack)
 
-                # Push current vertex to stack which stores result
-        stack.insert(0, v)
+        # Push current vertex to stack which stores result
+        stack.append(v)
 
         # The function to do Topological Sort. It uses recursive
         # topologicalSortUtil()

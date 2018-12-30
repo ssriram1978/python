@@ -28,29 +28,52 @@ def mark_neighbors_visited(graph,
         return
     if graph[current_row][current_column] == 1:
         visited_graph[current_row][current_column] = 1
+        #right
         mark_neighbors_visited(graph,
                                visited_graph,
                                current_row,
                                current_column+1)
+        #left
         mark_neighbors_visited(graph,
                                visited_graph,
                                current_row,
                                current_column - 1)
+        #bottom
         mark_neighbors_visited(graph,
                                visited_graph,
                                current_row+1,
                                current_column)
+        #top
         mark_neighbors_visited(graph,
                                visited_graph,
                                current_row-1,
                                current_column)
+        #right top
+        mark_neighbors_visited(graph,
+                               visited_graph,
+                               current_row+1,
+                               current_column+1)
+        #left top
+        mark_neighbors_visited(graph,
+                               visited_graph,
+                               current_row+1,
+                               current_column - 1)
+        #bottom left
+        mark_neighbors_visited(graph,
+                               visited_graph,
+                               current_row+1,
+                               current_column-1)
+        #bottom right
+        mark_neighbors_visited(graph,
+                               visited_graph,
+                               current_row+1,
+                               current_column+1)
 
 def count_islands(graph):
     count=0
     rows = len(graph)
     columns = len(graph[0])
     visited_graph = [[0 for y in range(columns)] for x in range(rows)]
-    print(visited_graph)
     for index1 in range(rows):
         for index2 in range(columns):
             if not visited_graph[index1][index2]:

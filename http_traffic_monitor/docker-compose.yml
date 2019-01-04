@@ -1,0 +1,18 @@
+version: '3.2'
+services:
+  http_traffic_monitor:
+    image: ssriram1978/http_traffic_monitor:latest
+    ports:
+      - "8085:8085"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      log_file_name_key: /var/log/access.log
+      output_current_stats_file_name_key: current_stats.txt
+      output_alarms_events_file_name_key: historic_stats.txt
+      stats_time_interval_key: 10
+      threshold_key: 10
+      event_timer_val_key: 120
+      web_server_port_key: 8085

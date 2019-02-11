@@ -53,6 +53,18 @@ def min_num_of_coins(n,list_of_coins):
                         dp[current_row][current_column] = -1
     return dp[-1][-1]
 
+def min_num_of_coins2(n,list_of_coins):
+    dp = [0 for _ in range(n+1)]
+    for coin in list_of_coins:
+        #mark these coins as 1 in the dp list.
+        if coin <= n:
+            dp[coin]=1
+    for current_min_num_of_coins in range(1,n+1):
+        dp[current_min_num_of_coins] = min(1+dp[current_min_num_of_coins-list_of_coins[index]] \
+        for index in range(len(list_of_coins)) if current_min_num_of_coins - list_of_coins[index] >= 0 )
+    return dp[-1]
+
 list_of_coins = [1,5,10,25]
 for index in range(1,26):
     print("minimum number of coins needed to make n={} is {}.".format(index,min_num_of_coins(index,list_of_coins)))
+    print("minimum number of coins needed to make n={} is {}.".format(index,min_num_of_coins2(index,list_of_coins)))
